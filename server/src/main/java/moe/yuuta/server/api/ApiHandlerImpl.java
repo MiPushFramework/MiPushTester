@@ -36,7 +36,7 @@ public class ApiHandlerImpl implements ApiHandler {
     }
 
     @Override
-    public void handleIndex(RoutingContext routingContext) {
+    public void handleFrameworkIndex(RoutingContext routingContext) {
         routingContext.response()
                 .putHeader("Content-Type", "text/html")
                 .setStatusCode(200)
@@ -160,5 +160,22 @@ public class ApiHandlerImpl implements ApiHandler {
         String values = builder.toString();
         values = values.substring(0, values.length() - 1);
         return values;
+    }
+
+    @Override
+    public void handleTesterIndex(RoutingContext routingContext) {
+        routingContext.response()
+                .putHeader("Content-Type", "text/html")
+                .setStatusCode(200)
+                .end("<html>" +
+                        "<head>" +
+                        "<title>MiPush Tester</title>" +
+                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                        "</head>" +
+                        "<body>" +
+                        "<p>Homepage is still under construction, check it back later.</p>" +
+                        "<a href=\"https://github.com/Trumeet/MiPushTester\">GitHub</a>" +
+                        "</body>" +
+                        "</html>");
     }
 }

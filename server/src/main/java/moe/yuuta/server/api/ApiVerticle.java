@@ -28,6 +28,7 @@ public class ApiVerticle extends AbstractVerticle {
     private void registerRoutes (Router router) {
         ApiHandler handler = ApiHandler.apiHandler(vertx);
         router.route(POST, ROUTE_TEST).handler(handler::handlePush);
-        router.route(GET, ROUTE).handler(handler::handleIndex);
+        router.route(GET, ROUTE).handler(handler::handleFrameworkIndex);
+        router.route(GET, ROUTE_TEST).handler(handler::handleTesterIndex);
     }
 }

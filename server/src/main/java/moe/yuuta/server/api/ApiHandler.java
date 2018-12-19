@@ -9,5 +9,6 @@ public interface ApiHandler {
     }
 
     void handlePush (RoutingContext routingContext);
-    void handleIndex (RoutingContext routingContext);
+    void handleFrameworkIndex(RoutingContext routingContext);
+    void handleTesterIndex (RoutingContext routingContext);
 }
