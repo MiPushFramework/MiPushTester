@@ -2,15 +2,14 @@ package moe.yuuta.mipushtester.push;
 
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import moe.yuuta.common.Constants;
 import moe.yuuta.mipushtester.BuildConfig;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,9 +21,8 @@ public class APIManager {
         if (instance == null) {
             instance = new APIManager();
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public Response intercept(@NonNull Interceptor.Chain chain) {
+                    .addInterceptor(chain -> {
+                        try {
                             Request original = chain.request();
 
                             Request.Builder originalBuilder = original.newBuilder();
@@ -32,6 +30,8 @@ public class APIManager {
                                     .addHeader(Constants.HEADER_VERSION, BuildConfig.VERSION_NAME);
                             Request request = originalBuilder.build();
                             return chain.proceed(request);
+                        } catch (IOException ignored) {
+                            return null;
                         }
                     });
             instance.apiInterface = new Retrofit.Builder()
