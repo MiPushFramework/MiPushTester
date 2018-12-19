@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">MiPush Tester</string>
+    <string name="status_not_registered">Not registered (%1$s)</string>
+    <string name="status_registered">Registered (%1$s)</string>
+    <string name="status_miui_push_detected">System mode</string>
+    <string name="status_miui_push_not_detected">System push service not found</string>
+    <string name="push_card_title">Send to yourself</string>
+    <string name="push_card_summary">Send a message to this device and test push availability</string>
+    <string name="create_push">Create a push</string>
+    <string name="get_reg_id">My registration ID</string>
+    <string name="get_reg_id_dialog"><![CDATA[
+<h1>Your registration ID:</h1>
+<tt>%1$s</tt>
+<br /><br />
+<summary><font color="%2$s">Everyone who knows your registration ID can send notification to this device. It will be automatically updated.</font></summary>
+    ]]></string>
+    <string name="get_reg_id_unavailable">Unavailable (Only available after you register)</string>
+    <string name="close">Close</string>
+    <string name="reset_title">Reset</string>
+    <string name="reset_summary">Delete all push settings, include your registration ID</string>
+    <string name="reset_and_restart">Reset and restart</string>
+    <string name="reset_toast">Cleaning, please wait until it starts automatically.....</string>
+
+    <!-- Send Push -->
+    <string name="send_push_delay">Delay</string>
+    <string name="send_push_delay_item_summary">Delay this message</string>
+    <string name="send_push_delay_summary">Delay send this message, from 0 seconds to 60 seconds.</string>
+    <string name="send_push_display">Display Type</string>
+    <string name="send_push_display_summary">The method to display the notification on your device</string>
+    <string-array name="send_push_display_items_ui">
+        <item>All</item>
+        <item>Sound</item>
+        <item>Vibrate</item>
+        <item>Lights</item>
+    </string-array>
+    <string-array name="send_push_display_items_id">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="send_push_pass_through">Pass through message</string>
+    <string name="send_push_pass_through_summary">Message sent directly to this app without displaying any notifications</string>
+    <string name="send_push_click_action">Click action</string>
+    <string name="send_push_click_action_type">Type</string>
+    <string name="send_push_click_action_type_summary">The action type when you click on the notification</string>
+    <string-array name="send_push_click_action_items_ui">
+        <item>Start app</item>
+        <item>Launch URL</item>
+        <item>Start push details page</item>
+    </string-array>
+    <string-array name="send_push_click_action_items_id">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="send">Send</string>
+    <string name="url">URL</string>
+    <string name="send_push_click_action_url_summary">The URL will be launched after you click the notification</string>
+    <string name="send_push_notify_foreground">Notify when is foreground</string>
+    <string name="send_push_notify_foreground_summary">Still receive message when this app is in foreground</string>
+    <string name="send_push_enforce_wifi">Only receive on WiFi</string>
+    <string name="send_push_enforce_wifi_summary">Only receive this push when you\'ve connected to WiFi</string>
+    <string name="send_push_sound_uri">Use custom notification sound</string>
+    <string name="send_push_sound_uri_summary">Use internal sound instead of system default. (Sound comes from Android 4.1.1 under Apache 2 license)</string>
+    <string name="error_delay_invalid">Delay is invalid</string>
+    <string name="error_url_invalid">URL is invalid</string>
+    <string name="send_push_sending">Sending</string>
+    <string name="send_push_fail">Failed to send</string>
+    <string name="send_push_sent">Sent</string>
+    <string name="send_push_limits">Limits</string>
+    <string name="send_push_limit_none">None</string>
+    <string name="send_push_limit_only_template">Only %1$s can receive</string>
+    <string name="send_push_limit_cannot_template">%1$s can\'t receive</string>
+    <string name="send_push_limit_locale">Locale</string>
+    <string name="send_push_limit_locale_summary">Limit message receiving by client locale</string>
+    <string name="send_push_limit_version">Version</string>
+    <string name="send_push_limit_version_summary">Limit message receiving by client version</string>
+    <string name="send_push_limit_model">Model</string>
+    <string name="send_push_limit_model_summary">Limit message receiving by device model</string>
+    <string-array name="send_push_limit_ev_default">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <!-- Message detail -->
+    <string name="detail">Message ID: %1$s\n\nMiPushTester custom Extras: %2$s\n\nMiPush Extras: \n%3$s\n\nPass Through: %4$s\n\nFull message:\n%android:scrollbars = "vertical"5$s</string>
+    <string name="detail_title">Message Detail</string>
+    <string name="error_detail">Details</string>
+    <string name="share_logs">Share Logs</string>
+    <string name="share_logs_chooser_title">Send logs to…</string>
+    <string name="view_on_github">View on GitHub</string>
+</resources>

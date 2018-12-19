@@ -1,0 +1,6 @@
+# The Keys of client
+appId=123
+appKey=123
+# The PackageName of client
+# You should change common/src/main/java/moe/yuuta/common/Constants.java#CLIENT_ID
+app.id=com.example.mipushtester

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="uiHandler"
+            type="moe.yuuta.mipushtester.MainFragmentUIHandler" />
+        <variable
+            name="status"
+            type="moe.yuuta.mipushtester.status.RegistrationStatus" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp">
+
+            <include layout="@layout/item_registration_status"
+                android:id="@+id/layout_registration_status"
+                bind:status="@{status}"
+                bind:uiHandler="@{uiHandler}" />
+            <include layout="@layout/item_send_push"
+                bind:uiHandler="@{uiHandler}" />
+            <include layout="@layout/item_reset"
+                bind:uiHandler="@{uiHandler}" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

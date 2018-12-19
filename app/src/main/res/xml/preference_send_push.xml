@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <EditTextPreference
+        android:key="delay"
+        android:numeric="integer"
+        android:title="@string/send_push_delay"
+        android:defaultValue="0"
+        app:commitOnEnter="true"
+        android:inputType="number"
+        android:summary="@string/send_push_delay_item_summary"
+        android:dialogMessage="@string/send_push_delay_summary" />
+    <SimpleMenuPreference
+        android:key="display"
+        android:title="@string/send_push_display"
+        android:entries="@array/send_push_display_items_ui"
+        android:entryValues="@array/send_push_display_items_id"
+        android:defaultValue="0"
+        android:summary="@string/send_push_display_summary" />
+    <SwitchPreference
+        android:key="pass_through"
+        android:title="@string/send_push_pass_through"
+        android:defaultValue="false"
+        android:summary="@string/send_push_pass_through_summary" />
+    <SwitchPreference
+        android:key="sound_uri"
+        android:title="@string/send_push_sound_uri"
+        android:summary="@string/send_push_sound_uri_summary"
+        android:defaultValue="false" />
+    <PreferenceCategory
+        android:title="@string/send_push_click_action">
+        <SimpleMenuPreference
+            android:key="click_type"
+            android:title="@string/send_push_click_action_type"
+            android:entries="@array/send_push_click_action_items_ui"
+            android:entryValues="@array/send_push_click_action_items_id"
+            android:defaultValue="0"
+            android:summary="@string/send_push_click_action_type_summary" />
+        <EditTextPreference
+            android:key="click_url"
+            android:title="@string/url"
+            android:summary="@string/send_push_click_action_url_summary"
+            android:dialogMessage="@string/send_push_click_action_url_summary"
+            android:inputType="textUri"
+            android:defaultValue="https://yuuta.moe" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/send_push_limits">
+        <SwitchPreference
+            android:key="notify_foreground"
+            android:title="@string/send_push_notify_foreground"
+            android:summary="@string/send_push_notify_foreground_summary"
+            android:defaultValue="true" />
+        <SwitchPreference
+            android:key="enforce_wifi"
+            android:title="@string/send_push_enforce_wifi"
+            android:summary="@string/send_push_enforce_wifi_summary"
+            android:defaultValue="false" />
+        <SimpleMenuPreference
+            android:key="limit_locale"
+            android:title="@string/send_push_limit_locale"
+            android:defaultValue="0"
+            android:summary="@string/send_push_limit_locale_summary" />
+        <SimpleMenuPreference
+            android:key="limit_version"
+            android:title="@string/send_push_limit_version"
+            android:defaultValue="0"
+            android:summary="@string/send_push_limit_version_summary" />
+        <SimpleMenuPreference
+            android:key="limit_model"
+            android:title="@string/send_push_limit_model"
+            android:defaultValue="0"
+            android:summary="@string/send_push_limit_model_summary" />
+    </PreferenceCategory>
+</PreferenceScreen>

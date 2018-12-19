@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="uiHandler"
+            type="moe.yuuta.mipushtester.MainFragmentUIHandler" />
+        <variable
+            name="status"
+            type="moe.yuuta.mipushtester.status.RegistrationStatus" />
+    </data>
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/card_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true"
+        android:layout_marginTop="4dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:onClick="@{uiHandler::handleToggleRegister}">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image_status"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                tools:src="@drawable/ic_check_circle_black_48dp"
+                app:imageStatus="@{status.registered}"
+                android:scaleType="center"
+                android:importantForAccessibility="no"
+                android:tint="@color/material_tint_600"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp"
+                android:lineSpacingExtra="2dp"
+                app:textRegistered="@{status.registered}"
+                app:textUseMIUIPush="@{status.useMIUIPush}"
+                app:layout_constraintTop_toBottomOf="@id/image_status"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -1,0 +1,3 @@
+include ':server', ':common'
+if (new File('app').exists())
+    include ':app'
