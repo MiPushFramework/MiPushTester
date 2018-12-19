@@ -17,8 +17,28 @@ android {
         buildConfigField "String", "XM_APP_ID", "\"" + xmpushProperties['appId'] + "\""
         buildConfigField "String", "XM_APP_KEY", "\"" + xmpushProperties['appKey'] + "\""
     }
+    signingConfigs {
+        general {
+            def locate = xmpushProperties['key.locate']
+            def keystorePwd = xmpushProperties['key.store.pwd']
+            def alias = xmpushProperties['key.alias']
+            def pwd = xmpushProperties['key.pwd']
+            storeFile file(locate != null ? locate : project.rootProject.file(".yuuta.jks"))
+            storePassword keystorePwd != null ?
+                    keystorePwd : System.getenv("KEYSTORE_PASS")
+            keyAlias alias != null ?
+                    alias : System.getenv("ALIAS_NAME")
+            keyPassword pwd != null ?
+                    pwd : System.getenv("ALIAS_PASS")
+            v2SigningEnabled false
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.general
+        }
         release {
+            signingConfig signingConfigs.general
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

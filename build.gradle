@@ -25,8 +25,18 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+def gitCommitCount = 'git rev-list --count HEAD'.execute([], project.rootDir).text.trim()
+def version = "0.${gitCommitCount}"
+
 ext {
     vertxVersion = "3.6.0"
-    versionCode = 1
-    versionName = '1.0'
+    versionCode = Integer.parseInt("${gitCommitCount}")
+    versionName = "${version}"
+}
+
+task exportVersion(type: Exec) {
+    commandLine 'sh'
+    doLast {
+        file("$projectDir/version.txt").text = """$version"""
+    }
 }
