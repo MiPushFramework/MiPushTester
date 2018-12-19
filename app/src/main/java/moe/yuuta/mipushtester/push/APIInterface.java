@@ -7,6 +7,6 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface APIInterface {
-    @POST("/push")
+    @POST("/test")
     Call<JsonObject> push (@Body PushRequest request);
 }
