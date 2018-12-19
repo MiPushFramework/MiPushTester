@@ -7,15 +7,18 @@ xmpushProperties.load(project.file("xmpush.properties").newDataInputStream())
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId xmpushProperties['app.id']
+        def packageName = xmpushProperties['app.id']
+        applicationId packageName == null ? System.getenv("PACKAGE_NAME") : packageName
         minSdkVersion 21
         targetSdkVersion 28
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "XM_APP_ID", "\"" + xmpushProperties['appId'] + "\""
-        buildConfigField "String", "XM_APP_KEY", "\"" + xmpushProperties['appKey'] + "\""
+        def appId = xmpushProperties['appId']
+        def appKey = xmpushProperties['appKey']
+        buildConfigField "String", "XM_APP_ID", "\"" + appId == null ? System.getenv("XM_APP_ID") : appId + "\""
+        buildConfigField "String", "XM_APP_KEY", "\"" + appKey == null ? System.getenv("XM_APP_KEY") : appKey + "\""
     }
     signingConfigs {
         general {
