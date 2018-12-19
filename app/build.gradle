@@ -2,13 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 def xmpushProperties = new Properties()
-xmpushProperties.load(project.file("xmpush.properties").newDataInputStream())
+def conf = project.file("xmpush.properties")
+if (conf.exists()) xmpushProperties.load(conf.newDataInputStream())
 
 android {
     compileSdkVersion 28
     defaultConfig {
         def packageName = xmpushProperties['app.id']
-        applicationId packageName == null ? System.getenv("PACKAGE_NAME") : packageName
+        if (packageName == null) packageName = System.getenv("PACKAGE_NAME")
+        applicationId packageName
         minSdkVersion 21
         targetSdkVersion 28
         versionCode rootProject.ext.versionCode
@@ -16,9 +18,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         def appId = xmpushProperties['appId']
+        if (appId == null) appId = System.getenv("XM_APP_ID")
         def appKey = xmpushProperties['appKey']
-        buildConfigField "String", "XM_APP_ID", "\"" + appId == null ? System.getenv("XM_APP_ID") : appId + "\""
-        buildConfigField "String", "XM_APP_KEY", "\"" + appKey == null ? System.getenv("XM_APP_KEY") : appKey + "\""
+        if (appKey == null) appKey = System.getenv("XM_APP_KEY")
+        buildConfigField "String", "XM_APP_ID", "\"" + appId + "\""
+        buildConfigField "String", "XM_APP_KEY", "\"" + appKey + "\""
     }
     signingConfigs {
         general {
