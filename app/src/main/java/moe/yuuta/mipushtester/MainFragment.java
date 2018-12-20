@@ -73,6 +73,10 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
     }
 
     public void handleCreatePush (View v) {
+        if (!mRegistrationStatus.registered.get()) {
+            Toast.makeText(requireContext(), R.string.error_send_push_need_register, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Navigation.findNavController(requireActivity(), R.id.nav_host)
                 .navigate(R.id.action_mainFragment_to_sendPushFragment);
     }
