@@ -21,8 +21,8 @@ class PushRequest {
     @Nonnull(nonEmpty = true)
     private String registrationId;
     @JsonProperty("delay_ms")
-    @GreatLess(value = 0, flags = GreatLess.GREATER | GreatLess.EQUAL)
-    @GreatLess(value = PUSH_DELAY_MS_MAX, flags = GreatLess.LESSER | GreatLess.EQUAL)
+    @GreatLess(value = 0, greater = true, equal = true)
+    @GreatLess(value = PUSH_DELAY_MS_MAX, lesser = true, equal = true)
     private int delayMs;
     @JsonProperty("pass_through")
     private boolean passThrough;
@@ -33,7 +33,7 @@ class PushRequest {
     @JsonProperty("display")
     @NumberIn({DISPLAY_ALL, DISPLAY_LIGHTS, DISPLAY_SOUND, DISPLAY_VIBRATE})
     private int display;
-    @GreatLess(value = 0, flags = GreatLess.GREATER | GreatLess.EQUAL)
+    @GreatLess(value = 0, greater = true, equal = true)
     @JsonProperty("notify_id")
     private int notifyId;
     @JsonProperty("sound_uri")

@@ -68,37 +68,11 @@ public class DataVerifier {
                         if (greatLessGroup != null) {
                             GreatLess[] greatLesses = greatLessGroup.value();
                             for (GreatLess greatLess : greatLesses) {
-                                boolean equal = (greatLess.flags() & GreatLess.EQUAL) != 0;
-                                boolean greater = (greatLess.flags() & GreatLess.GREATER) != 0;
-                                boolean lesser = (greatLess.flags() & GreatLess.LESSER) != 0;
-                                if (equal && !greater && !lesser) {
-                                    // Only equal
-                                    if (number != greatLess.value()) {
-                                        logger.error(field.getName() + " is required equals to " + greatLess.value() + " but is " + number);
-                                        return false;
-                                    }
-                                }
-                                if (greater) {
-                                    if (equal && /* Should >=, shouldn't < */ number < greatLess.value()) {
-                                        logger.error(field.getName() + " is required >= " + greatLess.value() + " but is " + number);
-                                        return false;
-                                    }
-                                    else if (/* Should > */!(number > greatLess.value())) {
-                                        logger.error(field.getName() + " is required > " + greatLess.value() + " but is " + number);
-                                        return false;
-                                    }
-                                }
-                                if (lesser) {
-                                    if (equal && /* Should <=, shouldn't > */ number > greatLess.value()) {
-                                        logger.error(field.getName() + " is required < " + greatLess.value() + " but is " + number);
-                                        return false;
-                                    }
-                                    else if (/* Should < */!(number < greatLess.value())) {
-                                        logger.error(field.getName() + " is required < " + greatLess.value() + " but is " + number);
-                                        return false;
-                                    }
-                                }
+                                if (!verifyGreatLess(field.getName(), number, greatLess)) return false;
                             }
+                        } else {
+                            GreatLess single = field.getAnnotation(GreatLess.class);
+                            if (!verifyGreatLess(field.getName(), number, single)) return false;
                         }
                     } catch (NumberFormatException|NullPointerException ignored) {
                         // Not a number
@@ -108,6 +82,51 @@ public class DataVerifier {
             }
         }
         // All checks passed
+        return true;
+    }
+
+    private static boolean verifyGreatLess (String name, double given, GreatLess greatLess) {
+        boolean equal = greatLess.equal();
+        boolean greater = greatLess.greater();
+        boolean lesser = greatLess.lesser();
+        logger.debug("N=" + name + ",V=" + given + ",T=" + greatLess.value() + ",E=" + equal + ",G=" + greater + ",L=" + lesser);
+        if (greater && lesser && !equal) {
+            return false;
+        }
+        if (!greater && !lesser && !equal)
+            return false;
+        if (equal && !greater && !lesser) {
+            // Only equal
+            if (given != greatLess.value()) {
+                logger.error(name + " is required equals to " + greatLess.value() + " but is " + given);
+                return false;
+            }
+        }
+        if (greater) {
+            if (equal) {
+                if (/* Should >=, shouldn't < */ given < greatLess.value()) {
+                    logger.error(name + " is required >= " + greatLess.value() + " but is " + given);
+                    return false;
+                }
+            }
+            else if (/* Should > */!(given > greatLess.value())) {
+                logger.error(name + " is required > " + greatLess.value() + " but is " + given);
+                return false;
+            }
+        }
+        if (lesser) {
+            if (equal) {
+                if (/* Should <=, shouldn't > */ given > greatLess.value()) {
+                    logger.error(name + " is required < " + greatLess.value() + " but is " + given);
+                    return false;
+                }
+
+            }
+            else if (/* Should < */!(given < greatLess.value())) {
+                logger.error(name + " is required < " + greatLess.value() + " but is " + given);
+                return false;
+            }
+        }
         return true;
     }
 }

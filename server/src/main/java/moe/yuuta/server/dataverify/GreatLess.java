@@ -13,9 +13,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(value = GreatLessGroup.class)
 public @interface GreatLess {
-    int GREATER = 1;
-    int LESSER = 1<<1;
-    int EQUAL = 1<<2;
     long value ();
-    int flags ();
+    boolean greater () default false;
+    boolean lesser () default false;
+    boolean equal () default false;
 }
