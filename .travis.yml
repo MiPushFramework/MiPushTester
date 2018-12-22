@@ -20,7 +20,8 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_7aab63907238_key -iv $encrypted_7aab63907238_iv -in .yuuta.jks.enc -out .yuuta.jks -d
 before_deploy:
 - export VERSION=$(cat version.txt)
-- git tag $VERSION
+- export VERSION_CODE=$(version_code.txt)
+- git tag $VERSION_CODE
 # Rename
 - mv "app/build/outputs/apk/release/app-release.apk" "app/build/outputs/apk/release/app.apk"
 deploy:

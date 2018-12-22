@@ -40,5 +40,6 @@ task exportVersion(type: Exec) {
     commandLine 'sh'
     doLast {
         file("$projectDir/version.txt").text = """$version"""
+        file("$projectDir/version_code.txt").text = """${gitCommitCount}"""
     }
 }
