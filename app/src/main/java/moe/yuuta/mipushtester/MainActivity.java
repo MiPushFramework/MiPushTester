@@ -14,4 +14,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         NavigationUI.setupActionBarWithNavController(this, Navigation.findNavController(this, R.id.nav_host));
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return Navigation.findNavController(this, R.id.nav_host).navigateUp();
+    }
 }
