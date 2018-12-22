@@ -1,13 +1,15 @@
 package moe.yuuta.mipushtester.push;
 
+import com.elvishew.xlog.Logger;
+import com.elvishew.xlog.XLog;
 import com.google.gson.JsonObject;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import moe.yuuta.common.Constants;
 import moe.yuuta.mipushtester.BuildConfig;
+import moe.yuuta.mipushtester.update.Update;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -15,6 +17,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIManager {
+    private final Logger logger = XLog.tag(APIManager.class.getSimpleName()).build();
+
     private APIInterface apiInterface;
     private static APIManager instance;
     public static @NonNull APIManager getInstance() {
@@ -22,17 +26,14 @@ public class APIManager {
             instance = new APIManager();
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
-                        try {
-                            Request original = chain.request();
+                        Request original = chain.request();
 
-                            Request.Builder originalBuilder = original.newBuilder();
-                            originalBuilder.addHeader(Constants.HEADER_LOCALE, Locale.getDefault().toString())
-                                    .addHeader(Constants.HEADER_VERSION, BuildConfig.VERSION_NAME);
-                            Request request = originalBuilder.build();
-                            return chain.proceed(request);
-                        } catch (IOException ignored) {
-                            return null;
-                        }
+                        Request.Builder originalBuilder = original.newBuilder();
+                        originalBuilder.addHeader(Constants.HEADER_LOCALE, Locale.getDefault().toString())
+                                .addHeader(Constants.HEADER_VERSION, BuildConfig.VERSION_NAME)
+                                .addHeader(Constants.HEADER_PRODUCT, BuildConfig.APPLICATION_ID);
+                        Request request = originalBuilder.build();
+                        return chain.proceed(request);
                     });
             instance.apiInterface = new Retrofit.Builder()
                     .addConverterFactory(GsonConverterFactory.create())
@@ -45,5 +46,9 @@ public class APIManager {
 
     public Call<JsonObject> push (@NonNull PushRequest request) {
         return apiInterface.push(request);
+    }
+
+    public Call<Update> getUpdate () {
+        return apiInterface.getUpdate();
     }
 }

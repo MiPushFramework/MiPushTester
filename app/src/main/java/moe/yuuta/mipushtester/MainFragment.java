@@ -23,8 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+import com.google.android.material.snackbar.Snackbar;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import androidx.annotation.NonNull;
@@ -36,13 +38,22 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import moe.yuuta.mipushtester.databinding.FragmentMainBinding;
 import moe.yuuta.mipushtester.log.LogUtils;
+import moe.yuuta.mipushtester.push.APIManager;
 import moe.yuuta.mipushtester.status.RegistrationStatus;
+import moe.yuuta.mipushtester.update.Update;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.os.Looper.getMainLooper;
 
 public class MainFragment extends Fragment implements MainFragmentUIHandler {
+    private Logger logger = XLog.tag(MainFragment.class.getSimpleName()).build();
+
     private RegistrationStatus mRegistrationStatus;
+    private FragmentMainBinding binding;
+    private Call<Update> mGetUpdateCall;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,11 +64,48 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentMainBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         mRegistrationStatus = RegistrationStatus.get(requireContext());
         binding.setStatus(mRegistrationStatus);
         binding.setUiHandler(this);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mGetUpdateCall = APIManager.getInstance().getUpdate();
+        mGetUpdateCall.enqueue(new Callback<Update>() {
+            @Override
+            public void onResponse(@NonNull Call<Update> call, @NonNull Response<Update> response) {
+                if (call.isCanceled()) return;
+                if (!response.isSuccessful()) return;
+                Update result = response.body();
+                if (result == null) return;
+                if (result.getVersionCode() < BuildConfig.VERSION_CODE) return;
+                Snackbar.make(binding.getRoot(), getString(R.string.update_available,
+                        result.getVersionName()), Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.view, v -> {
+                            String url =
+                                    shouldOpenGooglePlay() ?
+                                            "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID
+                                            : result.getHtmlLink();
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                            } catch (ActivityNotFoundException ignored) {}
+                        }).show();
+            }
+
+            private boolean shouldOpenGooglePlay () {
+                return "com.android.vending".equals(requireContext().getPackageManager().getInstallerPackageName(BuildConfig.APPLICATION_ID));
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Update> call, @NonNull Throwable t) {
+                if (call.isCanceled()) return;
+                logger.e("Unable to get update", t);
+            }
+        });
     }
 
     public void handleToggleRegister (View v) {
@@ -146,5 +194,11 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mGetUpdateCall != null) mGetUpdateCall.cancel();
+        super.onDestroyView();
     }
 }

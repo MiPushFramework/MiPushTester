@@ -11,6 +11,7 @@ import static io.vertx.core.http.HttpMethod.POST;
 public class ApiVerticle extends AbstractVerticle {
     static final String ROUTE = "/";
     static final String ROUTE_TEST = ROUTE + "test";
+    static final String ROUTE_UPDATE = ROUTE + "update";
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -30,6 +31,7 @@ public class ApiVerticle extends AbstractVerticle {
         router.route(POST, ROUTE_TEST).handler(handler::handlePush);
         router.route(GET, ROUTE).handler(handler::handleFrameworkIndex);
         router.route(GET, ROUTE_TEST).handler(handler::handleTesterIndex);
+        router.route(GET, ROUTE_UPDATE).handler(handler::handleUpdate);
     }
 
     ApiHandler getApiHandler () {

@@ -2,7 +2,7 @@
 appId=123
 appKey=123
 # The PackageName of client
-# You should change common/src/main/java/moe/yuuta/common/Constants.java#CLIENT_ID
+# You should change common/src/main/java/moe/yuuta/common/Constants.java#TESTER_CLIENT_ID
 app.id=com.example.mipushtester
 # Signing configuration
 key.locate=/your/sign.jks

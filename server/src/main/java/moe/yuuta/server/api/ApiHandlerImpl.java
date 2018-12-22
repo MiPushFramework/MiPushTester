@@ -8,18 +8,21 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Vertx;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 import moe.yuuta.common.Constants;
+import moe.yuuta.server.api.update.Update;
 import moe.yuuta.server.dataverify.DataVerifier;
+import moe.yuuta.server.github.GitHubApi;
+import moe.yuuta.server.github.Release;
 import moe.yuuta.server.mipush.Message;
 import moe.yuuta.server.mipush.MiPushApi;
 import moe.yuuta.server.mipush.SendMessageResponse;
 import moe.yuuta.server.res.Resources;
 
+import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 import static moe.yuuta.common.Constants.DISPLAY_ALL;
 import static moe.yuuta.common.Constants.DISPLAY_LIGHTS;
 import static moe.yuuta.common.Constants.DISPLAY_SOUND;
@@ -86,7 +89,7 @@ public class ApiHandlerImpl implements ApiHandler {
                     new SimpleDateFormat("HH:mm:ss", Locale.CHINA).format(Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai")).getTime()));
             Message message = new Message();
             message.setTicker(ticker);
-            message.setRestrictedPackageName(Constants.CLIENT_ID);
+            message.setRestrictedPackageName(Constants.TESTER_CLIENT_ID);
             // FIXME
             message.setPassThrough(request.isPassThrough() ? Message.PASS_THROUGH_ENABLED :
                     Message.PASS_THROUGH_DISABLED);
@@ -148,7 +151,7 @@ public class ApiHandlerImpl implements ApiHandler {
                     SendMessageResponse response = ar.result().body();
                     routingContext.response()
                             .setStatusCode(response.getCode() == SendMessageResponse.CODE_SUCCESS ?
-                                    HttpResponseStatus.NO_CONTENT.code() : 500)
+                                    NO_CONTENT.code() : 500)
                             .end();
                 } else {
                     logger.error("Cannot send message", ar.cause());
@@ -171,5 +174,68 @@ public class ApiHandlerImpl implements ApiHandler {
                 .putHeader("Content-Type", "text/html")
                 .setStatusCode(200)
                 .end(HTML_TESTER_INDEX);
+    }
+
+    @Override
+    public void handleUpdate(RoutingContext routingContext) {
+        final String productId = routingContext.request().getHeader(Constants.HEADER_PRODUCT);
+        if (productId == null) {
+            routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+            return;
+        }
+        String repo;
+        String owner;
+        switch (productId) {
+            // Only "Authorized" offical clients can access this service.
+            case Constants.TESTER_CLIENT_ID:
+                repo = "MiPushTester";
+                owner = "Trumeet";
+                break;
+            case Constants.FRAMEWORK_CLIENT_ID:
+                repo = "MiPushFramework";
+                owner = "Trumeet";
+                break;
+            default:
+                logger.warn("An unknown client is attempting to get update status: " + productId);
+                routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+                return;
+        }
+        getGitHubApi().getLatestRelease(owner, repo, ar -> {
+            if (ar.succeeded()) {
+                Release release = ar.result().body();
+                if (release == null
+                    || release.getName() == null
+                    || release.getTagName() == null
+                    || release.getName().trim().equals("")
+                    || release.getTagName().trim().equals("")) {
+                    routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+                } else {
+                    Update update = new Update();
+                    update.setHtmlLink(release.getHtmlUrl());
+                    try {
+                        update.setVersionCode(Integer.parseInt(release.getTagName()));
+                    } catch (NumberFormatException ignored) {
+                        update.setVersionCode(Integer.MAX_VALUE);
+                    }
+                    update.setVersionName(release.getName());
+                    routingContext.response()
+                            .putHeader("Content-Type", "application/json")
+                            .setChunked(true)
+                            .setStatusCode(200)
+                            .end(ApiUtils.tryObjectToJson(update));
+                }
+            } else {
+                logger.error("Unable to get update", ar.cause());
+                routingContext.response()
+                        .setChunked(true)
+                        .setStatusCode(500)
+                        .end();
+            }
+        });
+    }
+
+    @Override
+    public GitHubApi getGitHubApi() {
+        return new GitHubApi(vertx.createHttpClient());
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -13,16 +14,25 @@ import java.util.Map;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpVersion;
+import io.vertx.core.json.JsonArray;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.client.HttpResponse;
 import moe.yuuta.common.Constants;
+import moe.yuuta.server.api.update.Update;
+import moe.yuuta.server.github.GitHubApi;
+import moe.yuuta.server.github.Release;
 import moe.yuuta.server.mipush.Message;
 import moe.yuuta.server.mipush.MiPushApi;
 import moe.yuuta.server.mipush.SendMessageResponse;
 import moe.yuuta.server.res.Resources;
+
+import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 
 @RunWith(VertxUnitRunner.class)
 public class ApiHandlerImplTest {
@@ -30,10 +40,15 @@ public class ApiHandlerImplTest {
         void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler);
     }
 
+    private interface GetLatestReleaseCallback {
+        void getLatestRelease (String owner, String repo, Handler<AsyncResult<HttpResponse<Release>>> handler);
+    }
+
     private Vertx vertx;
     private ApiHandler apiHandler;
     private ApiVerticle apiVerticle; // We won't build a mocked RoutingContext
-    private volatile SendPushCallback callback;
+    private volatile SendPushCallback sendPushCallback;
+    private volatile GetLatestReleaseCallback getLatestReleaseCallback;
 
     @Before
     public void setUp (TestContext testContext) {
@@ -42,10 +57,20 @@ public class ApiHandlerImplTest {
         Mockito.when(apiHandler.getMiPushApi()).thenReturn(new MiPushApi(null) {
             @Override
             public void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
-                if (callback == null) {
+                if (sendPushCallback == null) {
                     super.pushOnceToId(message, regIds, customExtras, handler);
                 } else {
-                    callback.pushOnceToId(message, regIds, customExtras, handler);
+                    sendPushCallback.pushOnceToId(message, regIds, customExtras, handler);
+                }
+            }
+        });
+        Mockito.when(apiHandler.getGitHubApi()).thenReturn(new GitHubApi(null) {
+            @Override
+            public void getLatestRelease(String owner, String repo, Handler<AsyncResult<HttpResponse<Release>>> handler) {
+                if (getLatestReleaseCallback == null) {
+                    super.getLatestRelease(owner, repo, handler);
+                } else {
+                    getLatestReleaseCallback.getLatestRelease(owner, repo, handler);
                 }
             }
         });
@@ -65,6 +90,244 @@ public class ApiHandlerImplTest {
                 async.complete();
             });
         });
+    }
+
+    @Test(timeout = 2000)
+    public void shouldGetExistingUpdate (TestContext testContext) {
+        Async async = testContext.async();
+        this.getLatestReleaseCallback = ((owner, repo, handler) -> {
+            handler.handle(new AsyncResult<HttpResponse<Release>>() {
+                @Override
+                public HttpResponse<Release> result() {
+                    return new HttpResponse<Release>() {
+                        @Override
+                        public HttpVersion version() {
+                            return null;
+                        }
+
+                        @Override
+                        public int statusCode() {
+                            return 200;
+                        }
+
+                        @Override
+                        public String statusMessage() {
+                            return "OK";
+                        }
+
+                        @Override
+                        public MultiMap headers() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getHeader(String s) {
+                            return null;
+                        }
+
+                        @Override
+                        public MultiMap trailers() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getTrailer(String s) {
+                            return null;
+                        }
+
+                        @Override
+                        public List<String> cookies() {
+                            return null;
+                        }
+
+                        @Override
+                        public Release body() {
+                            Release release = new Release();
+                            release.setBody("Body");
+                            release.setHtmlUrl("https://google.com");
+                            release.setId(100);
+                            release.setName("1.0.0");
+                            release.setTagName("100");
+                            release.setUrl("https://api.github.com");
+                            return release;
+                        }
+
+                        @Override
+                        public Buffer bodyAsBuffer() {
+                            return Buffer.buffer(ApiUtils.tryObjectToJson(body()));
+                        }
+
+                        @Override
+                        public JsonArray bodyAsJsonArray() {
+                            return null;
+                        }
+                    };
+                }
+
+                @Override
+                public Throwable cause() {
+                    return null;
+                }
+
+                @Override
+                public boolean succeeded() {
+                    return true;
+                }
+
+                @Override
+                public boolean failed() {
+                    return false;
+                }
+            });
+        });
+
+        vertx.createHttpClient().get(8080, "localhost", ApiVerticle.ROUTE_UPDATE,
+                httpClientResponse -> {
+                    testContext.assertEquals(200, httpClientResponse.statusCode());
+                    httpClientResponse.bodyHandler(buffer -> {
+                        Update update;
+                        try {
+                            update = ApiUtils.jsonToObject(buffer.toString(), Update.class);
+                        } catch (IOException e) {
+                            testContext.fail(e);
+                            return; // Should never happen
+                        }
+                        testContext.assertNotNull(update);
+                        testContext.assertEquals(update.getHtmlLink(), "https://google.com");
+                        testContext.assertEquals(update.getVersionCode(), 100);
+                        testContext.assertEquals(update.getVersionName(), "1.0.0");
+                        async.complete();
+                    });
+                })
+                .putHeader(Constants.HEADER_PRODUCT, Constants.TESTER_CLIENT_ID)
+                .end();
+    }
+
+    @Test(timeout = 2000)
+    public void shouldApplyUpdateRepoMapping (TestContext testContext) throws Exception {
+        Async async = testContext.async(3);
+        this.getLatestReleaseCallback = ((owner, repo, handler) -> {
+            testContext.assertEquals("Trumeet", owner);
+            testContext.assertEquals("MiPushTester", repo);
+            async.countDown();
+        });
+
+        vertx.createHttpClient().get(8080, "localhost", ApiVerticle.ROUTE_UPDATE,
+                httpClientResponse -> {
+                    int status = httpClientResponse.statusCode();
+                    if (status == NO_CONTENT.code()) status = 200;
+                    testContext.assertEquals(200, status);
+                    async.countDown();
+                    async.complete();
+                })
+                .putHeader(Constants.HEADER_PRODUCT, Constants.TESTER_CLIENT_ID)
+                .end();
+
+        Thread.sleep(1000);
+
+        this.getLatestReleaseCallback = ((owner, repo, handler) -> {
+            // Shouldn't be called
+            testContext.fail("GitHub API is called by an \"unauthorized\" client");
+        });
+
+        vertx.createHttpClient().get(8080, "localhost", ApiVerticle.ROUTE_UPDATE, httpClientResponse -> {
+                    testContext.assertEquals(204, httpClientResponse.statusCode());
+                    async.countDown();
+                    async.complete();
+                })
+                .putHeader(Constants.HEADER_PRODUCT, "android.camera")
+                .end();
+    }
+
+    @Test(timeout = 2000)
+    public void shouldGetNonExistingUpdate (TestContext testContext) {
+        Async async = testContext.async();
+        this.getLatestReleaseCallback = ((owner, repo, handler) -> {
+            handler.handle(new AsyncResult<HttpResponse<Release>>() {
+                @Override
+                public HttpResponse<Release> result() {
+                    return new HttpResponse<Release>() {
+                        @Override
+                        public HttpVersion version() {
+                            return null;
+                        }
+
+                        @Override
+                        public int statusCode() {
+                            return 200;
+                        }
+
+                        @Override
+                        public String statusMessage() {
+                            return "OK";
+                        }
+
+                        @Override
+                        public MultiMap headers() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getHeader(String s) {
+                            return null;
+                        }
+
+                        @Override
+                        public MultiMap trailers() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getTrailer(String s) {
+                            return null;
+                        }
+
+                        @Override
+                        public List<String> cookies() {
+                            return null;
+                        }
+
+                        @Override
+                        public Release body() {
+                            return null;
+                        }
+
+                        @Override
+                        public Buffer bodyAsBuffer() {
+                            return null;
+                        }
+
+                        @Override
+                        public JsonArray bodyAsJsonArray() {
+                            return null;
+                        }
+                    };
+                }
+
+                @Override
+                public Throwable cause() {
+                    return null;
+                }
+
+                @Override
+                public boolean succeeded() {
+                    return true;
+                }
+
+                @Override
+                public boolean failed() {
+                    return false;
+                }
+            });
+        });
+
+        vertx.createHttpClient().get(8080, "localhost", ApiVerticle.ROUTE_UPDATE,
+                httpClientResponse -> {
+                    testContext.assertEquals(NO_CONTENT.code(), httpClientResponse.statusCode());
+                    async.complete();
+                })
+                .putHeader(Constants.HEADER_PRODUCT, Constants.TESTER_CLIENT_ID)
+                .end();
     }
 
     // TODO: Add invalid request check
@@ -88,14 +351,14 @@ public class ApiHandlerImplTest {
         final String requestLocale = "zh_TW";
 
         // TODO: Test multiple situations for variety arguments (e.g. display)
-        this.callback = (Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) -> {
+        this.sendPushCallback = (Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) -> {
                 testContext.assertNotNull(message);
                 testContext.assertEquals(message.getTitle(), Resources.getString("push_title", Locale.ENGLISH));
                 testContext.assertEquals(message.getTicker(), Resources.getString("push_ticker", Locale.ENGLISH));
                 // TODO: Fully match the description
                 testContext.assertNotNull(message.getDescription());
                 testContext.assertNotEquals(message.getDescription(), "");
-                testContext.assertEquals(message.getRestrictedPackageName(), Constants.CLIENT_ID);
+                testContext.assertEquals(message.getRestrictedPackageName(), Constants.TESTER_CLIENT_ID);
                 testContext.assertEquals(message.getPassThrough(), Message.PASS_THROUGH_ENABLED);
                 testContext.assertEquals(message.getNotifyForeground(), Message.NOTIFY_FOREGROUND_DISABLE);
                 testContext.assertEquals(message.getConnpt(), Message.CONNPT_WIFI);

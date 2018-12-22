@@ -7,12 +7,14 @@ public class Constants {
     public static final int DISPLAY_SOUND = 1;
     public static final int DISPLAY_VIBRATE = 2;
     public static final int DISPLAY_LIGHTS = 3;
-    public static final String HEADER_LOCALE = "X-MiPushTester-Local";
-    public static final String HEADER_VERSION = "X-MiPushTester-Version";
+    public static final String HEADER_LOCALE = "X-MiPush-Local";
+    public static final String HEADER_VERSION = "X-MiPush-Version";
+    public static final String HEADER_PRODUCT = "X-MiPush-Product";
     public static final String EXTRA_MIPUSHTESTER_PREFIX = "mpt-";
     public static final String EXTRA_REQUEST_LOCALE = EXTRA_MIPUSHTESTER_PREFIX + "request_locale";
     public static final String EXTRA_REQUEST_TIME = EXTRA_MIPUSHTESTER_PREFIX + "request_time";
     public static final String EXTRA_CLIENT_VERSION = EXTRA_MIPUSHTESTER_PREFIX + "client_version";
     // The package name of client, for more details, see BUILD.md
-    public static final String CLIENT_ID = "moe.yuuta.mipushtester";
+    public static final String TESTER_CLIENT_ID = "moe.yuuta.mipushtester";
+    public static final String FRAMEWORK_CLIENT_ID = "top.trumeet.mipush";
 }

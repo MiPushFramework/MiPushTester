@@ -11,6 +11,7 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.RoutingContext;
+import moe.yuuta.server.github.GitHubApi;
 import moe.yuuta.server.mipush.MiPushApi;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
@@ -44,6 +45,16 @@ public class ApiVerticleTest {
             public MiPushApi getMiPushApi() {
                 return null;
             }
+
+            @Override
+            public void handleUpdate(RoutingContext routingContext) {
+                routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+            }
+
+            @Override
+            public GitHubApi getGitHubApi() {
+                return null;
+            }
         };
         apiVerticle = Mockito.spy(new ApiVerticle());
         Mockito.when(apiVerticle.getApiHandler()).thenReturn(stubApiHandler);
@@ -75,6 +86,15 @@ public class ApiVerticleTest {
             testContext.assertEquals(response.statusCode(), NO_CONTENT.code());
             async.complete();
         }).end();
+    }
+
+    @Test(timeout = 2000)
+    public void shouldGetUpdate (TestContext testContext) {
+        Async async = testContext.async();
+        vertx.createHttpClient().getNow(8080, "localhost", ApiVerticle.ROUTE_UPDATE, response -> {
+            testContext.assertEquals(response.statusCode(), NO_CONTENT.code());
+            async.complete();
+        });
     }
 
     @After
