@@ -79,7 +79,8 @@ public class ApiHandlerImpl implements ApiHandler {
                 return;
             }
             if ((request.getExtras() != null && request.getExtras().size() > 10) ||
-                    !DataVerifier.verify(request)) {
+                    !DataVerifier.verify(request) ||
+                    routingContext.request().getHeader(Constants.HEADER_PRODUCT) == null) {
                 routingContext.response().setStatusCode(400).end();
                 return;
             }
@@ -89,7 +90,7 @@ public class ApiHandlerImpl implements ApiHandler {
                     new SimpleDateFormat("HH:mm:ss", Locale.CHINA).format(Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai")).getTime()));
             Message message = new Message();
             message.setTicker(ticker);
-            message.setRestrictedPackageName(Constants.TESTER_CLIENT_ID);
+            message.setRestrictedPackageName(routingContext.request().getHeader(Constants.HEADER_PRODUCT));
             // FIXME
             message.setPassThrough(request.isPassThrough() ? Message.PASS_THROUGH_ENABLED :
                     Message.PASS_THROUGH_DISABLED);

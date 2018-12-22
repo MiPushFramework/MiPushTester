@@ -349,6 +349,7 @@ public class ApiHandlerImplTest {
         final int delayMs = 100;
         final String requestVersion = "Haoye1.0";
         final String requestLocale = "zh_TW";
+        final String packageName = "android.sms";
 
         // TODO: Test multiple situations for variety arguments (e.g. display)
         this.sendPushCallback = (Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) -> {
@@ -358,7 +359,7 @@ public class ApiHandlerImplTest {
                 // TODO: Fully match the description
                 testContext.assertNotNull(message.getDescription());
                 testContext.assertNotEquals(message.getDescription(), "");
-                testContext.assertEquals(message.getRestrictedPackageName(), Constants.TESTER_CLIENT_ID);
+                testContext.assertEquals(message.getRestrictedPackageName(), packageName);
                 testContext.assertEquals(message.getPassThrough(), Message.PASS_THROUGH_ENABLED);
                 testContext.assertEquals(message.getNotifyForeground(), Message.NOTIFY_FOREGROUND_DISABLE);
                 testContext.assertEquals(message.getConnpt(), Message.CONNPT_WIFI);
@@ -404,6 +405,7 @@ public class ApiHandlerImplTest {
                 .putHeader("Accept-Language", Locale.ENGLISH.toString())
                 .putHeader(Constants.HEADER_LOCALE, requestLocale)
                 .putHeader(Constants.HEADER_VERSION, requestVersion)
+                .putHeader(Constants.HEADER_PRODUCT, packageName)
                 .setChunked(true)
                 .write(ApiUtils.tryObjectToJson(request))
                 .end();

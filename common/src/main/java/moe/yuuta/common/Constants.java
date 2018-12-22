@@ -14,7 +14,6 @@ public class Constants {
     public static final String EXTRA_REQUEST_LOCALE = EXTRA_MIPUSHTESTER_PREFIX + "request_locale";
     public static final String EXTRA_REQUEST_TIME = EXTRA_MIPUSHTESTER_PREFIX + "request_time";
     public static final String EXTRA_CLIENT_VERSION = EXTRA_MIPUSHTESTER_PREFIX + "client_version";
-    // The package name of client, for more details, see BUILD.md
     public static final String TESTER_CLIENT_ID = "moe.yuuta.mipushtester";
     public static final String FRAMEWORK_CLIENT_ID = "top.trumeet.mipush";
 }

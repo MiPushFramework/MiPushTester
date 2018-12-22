@@ -2,6 +2,11 @@
 This guide tells you how to build this project and run it on your own devices.
 It has two parts - Server (Docker) and client (Android).
 
+# Limits
+The relationship between the client and server is one to one, that means the "Official" APKs can only use "Official" server, your builds can't use it. So if you'd like to build the client, you will have to build the server as well.
+
+Update checker will also not works on your builds, it only supports official clients.
+
 # Pre-requirements
 Whatever to build the server or client, you should have a MiPush application which is registered in Mi dev console at first.
 
@@ -71,7 +76,5 @@ $ docker-compose up
 You can't use the same package name as the "Official" builds, you should change it to adapt your own `app id` which is registered in dev console.
 
 Just copy `app/xmpush.properties.template` to `app/xmpush.properties`, and change the values.
-
-Secondly, modify `common/src/main/java/moe/yuuta/common/Constants.java#CLIENT_ID` to the same package name.
 
 Finally, pack it with Android Studio.
