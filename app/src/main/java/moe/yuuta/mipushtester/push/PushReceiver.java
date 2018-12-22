@@ -14,6 +14,7 @@ import moe.yuuta.mipushtester.status.RegistrationStatus;
 public class PushReceiver extends PushMessageReceiver {
     @Override
     public void onReceivePassThroughMessage(Context context, MiPushMessage miPushMessage) {
+        // TODO: Add actions
         super.onReceivePassThroughMessage(context, miPushMessage);
     }
 
@@ -29,6 +30,7 @@ public class PushReceiver extends PushMessageReceiver {
 
     @Override
     public void onCommandResult(Context context, MiPushCommandMessage miPushCommandMessage) {
+        // TODO: Add actions
         super.onCommandResult(context, miPushCommandMessage);
     }
 }
