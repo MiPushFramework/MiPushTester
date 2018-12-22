@@ -9,3 +9,5 @@ key.locate=/your/sign.jks
 key.store.pwd=store-pwd
 key.alias=alias
 key.pwd=key-pwd
+# Fabric configuration (optional)
+fabric.key=Your fabric key

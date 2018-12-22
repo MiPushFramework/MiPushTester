@@ -5,6 +5,10 @@ def xmpushProperties = new Properties()
 def conf = project.file("xmpush.properties")
 if (conf.exists()) xmpushProperties.load(conf.newDataInputStream())
 
+if (xmpushProperties['fabric.key'] != null) {
+    apply plugin: 'io.fabric'
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -23,6 +27,11 @@ android {
         if (appKey == null) appKey = System.getenv("XM_APP_KEY")
         buildConfigField "String", "XM_APP_ID", "\"" + appId + "\""
         buildConfigField "String", "XM_APP_KEY", "\"" + appKey + "\""
+        def fabricKey = xmpushProperties['fabric.key']
+        if (fabricKey == null) fabricKey = System.getenv("FABRIC_KEY")
+        if (fabricKey == null) fabricKey = "disabled"
+        buildConfigField "String", "FABRIC_KEY", "\"" + fabricKey + "\""
+        manifestPlaceholders.fabricKey = fabricKey
     }
     signingConfigs {
         general {
@@ -82,4 +91,6 @@ dependencies {
     implementation"com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
+    // Fabric
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
 }

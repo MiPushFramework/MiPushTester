@@ -2,6 +2,8 @@ package moe.yuuta.mipushtester;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.elvishew.xlog.LogConfiguration;
 import com.elvishew.xlog.XLog;
 import com.elvishew.xlog.formatter.message.json.DefaultJsonFormatter;
@@ -13,6 +15,7 @@ import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
 import com.xiaomi.mipush.sdk.Logger;
 
+import io.fabric.sdk.android.Fabric;
 import moe.yuuta.mipushtester.log.LogUtils;
 
 public class App extends Application {
@@ -29,6 +32,10 @@ public class App extends Application {
                 .cleanStrategy(new FileLastModifiedCleanStrategy(1000 * 60 * 60 * 24 * 5))
                 .build();
         XLog.init(logConfiguration, androidPrinter, filePrinter);
+
+        if (!BuildConfig.DEBUG && !BuildConfig.FABRIC_KEY.equals("disabled")) {
+            Fabric.with(this, new Crashlytics(), new Answers());
+        }
 
         LoggerInterface newLogger = new LoggerInterface() {
             private com.elvishew.xlog.Logger logger =
