@@ -66,6 +66,10 @@ android {
     dataBinding {
         enabled = true
     }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -87,7 +91,7 @@ dependencies {
     implementation "android.arch.navigation:navigation-fragment:$nav_version"
     implementation "android.arch.navigation:navigation-ui:$nav_version"
     // Retrofit & RxJava
-    def retrofitVersion = "2.4.0"
+    def retrofitVersion = "2.5.0"
     implementation"com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
