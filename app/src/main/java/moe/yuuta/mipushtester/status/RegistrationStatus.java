@@ -30,7 +30,7 @@ public class RegistrationStatus {
 
     public void fetchStatus (@NonNull Context context) {
         useMIUIPush.set(MiPushClient.shouldUseMIUIPush(context));
-        // FIXME: It will start push, we should prevent it
+        // It will register push
         regId.set(MiPushClient.getRegId(context));
         // SDK will detect it's registered or not. Only registered client will return a non-null value.
         // The detection code is optimized, the best way is to use public APIs.

@@ -116,6 +116,11 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
         } else {
             XLog.i("Unregistering");
             MiPushClient.unregisterPush(requireContext());
+            requireContext().getSharedPreferences("mipush", Context.MODE_PRIVATE)
+                    .edit()
+                    // It will check if all settings are valid. If it's invalid, it won't register.
+                    .putString("devId", null)
+                    .apply();
             mRegistrationStatus.registered.set(false);
         }
     }
