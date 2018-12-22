@@ -1,6 +1,7 @@
 package moe.yuuta.mipushtester;
 
 import android.app.Application;
+import android.os.SystemClock;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -36,6 +37,13 @@ public class App extends Application {
         if (!BuildConfig.DEBUG && !BuildConfig.FABRIC_KEY.equals("disabled")) {
             Fabric.with(this, new Crashlytics(), new Answers());
         }
+        Thread.UncaughtExceptionHandler currentHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            com.elvishew.xlog.Logger logger = XLog.tag("Crash").build();
+            logger.e("App crashed", e);
+            SystemClock.sleep(100);
+            if (currentHandler != null) currentHandler.uncaughtException(t, e);
+        });
 
         LoggerInterface newLogger = new LoggerInterface() {
             private com.elvishew.xlog.Logger logger =
