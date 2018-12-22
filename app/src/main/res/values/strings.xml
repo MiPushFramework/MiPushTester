@@ -84,7 +84,7 @@
         <item>2</item>
     </string-array>
     <!-- Message detail -->
-    <string name="detail">Message ID: %1$s\n\nMiPushTester custom Extras: %2$s\n\nMiPush Extras: \n%3$s\n\nPass Through: %4$s\n\nFull message:\n%android:scrollbars = "vertical"5$s</string>
+    <string name="detail">Message ID: %1$s\n\nMiPushTester custom Extras: %2$s\n\nMiPush Extras: \n%3$s\n\nPass Through: %4$s\n\nFull message:\n%5$s</string>
     <string name="detail_title">Message Detail</string>
     <string name="error_detail">Details</string>
     <string name="share_logs">Share Logs</string>
