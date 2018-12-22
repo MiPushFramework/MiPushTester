@@ -33,6 +33,11 @@
         android:title="@string/send_push_global"
         android:summary="@string/send_push_global_summary"
         android:defaultValue="false" />
+    <SwitchPreference
+        android:key="pass_through_notification"
+        android:title="@string/send_push_pass_through_notification"
+        android:summary="@string/send_push_pass_through_notification_summary"
+        android:defaultValue="true" />
     <PreferenceCategory
         android:title="@string/send_push_click_action">
         <SimpleMenuPreference

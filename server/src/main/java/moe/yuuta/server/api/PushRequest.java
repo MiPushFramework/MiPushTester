@@ -64,6 +64,12 @@ class PushRequest {
     private Map<String, String> extras;
     @JsonProperty("global")
     private boolean global;
+    @JsonProperty("pass_through_notification")
+    private boolean passThroughNotification;
+
+    boolean isPassThroughNotification() {
+        return passThroughNotification;
+    }
 
     Map<String, String> getExtras() {
         return extras;
@@ -207,5 +213,9 @@ class PushRequest {
 
     public void setGlobal(boolean global) {
         this.global = global;
+    }
+
+    public void setPassThroughNotification(boolean passThroughNotification) {
+        this.passThroughNotification = passThroughNotification;
     }
 }

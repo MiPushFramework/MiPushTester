@@ -85,6 +85,8 @@
     </string-array>
     <string name="send_push_global">Use Global server</string>
     <string name="send_push_global_summary">Switch to global MiPush server, it may improve message receiving if you are not in China</string>
+    <string name="send_push_pass_through_notification">Pass through notification</string>
+    <string name="send_push_pass_through_notification_summary">Still display a notification if it\'s a pass through message</string>
     <!-- Message detail -->
     <string name="detail">Message ID: %1$s\n\nMiPushTester custom Extras: %2$s\n\nMiPush Extras: \n%3$s\n\nPass Through: %4$s\n\nFull message:\n%5$s</string>
     <string name="detail_title">Message Detail</string>
@@ -95,4 +97,6 @@
     <string name="error_send_push_need_register">Sending push requires registration at first</string>
     <string name="update_available">Update available: %1$s</string>
     <string name="view">View</string>
+    <!-- Push Receiver -->
+    <string name="push_receiver_pass_through_received">Pass through message received, id: %1$s</string>
 </resources>

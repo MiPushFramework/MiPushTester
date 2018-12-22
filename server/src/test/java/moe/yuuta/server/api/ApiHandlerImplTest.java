@@ -351,17 +351,22 @@ public class ApiHandlerImplTest {
         final String requestLocale = "zh_TW";
         final String packageName = "android.sms";
         final boolean global = true;
+        final boolean passThrough = true;
+        final boolean passThroughNotification = false;
 
         // TODO: Test multiple situations for variety arguments (e.g. display)
         this.sendPushCallback = (Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) -> {
                 testContext.assertNotNull(message);
-                testContext.assertEquals(message.getTitle(), Resources.getString("push_title", Locale.ENGLISH));
-                testContext.assertEquals(message.getTicker(), Resources.getString("push_ticker", Locale.ENGLISH));
-                // TODO: Fully match the description
-                testContext.assertNotNull(message.getDescription());
-                testContext.assertNotEquals(message.getDescription(), "");
+                if (!passThrough || passThroughNotification) {
+                    testContext.assertEquals(message.getTitle(), Resources.getString("push_title", Locale.ENGLISH));
+                    testContext.assertEquals(message.getTicker(), Resources.getString("push_ticker", Locale.ENGLISH));
+                    // TODO: Fully match the description
+                    testContext.assertNotNull(message.getDescription());
+                    testContext.assertNotEquals(message.getDescription(), "");
+                }
                 testContext.assertEquals(message.getRestrictedPackageName(), packageName);
-                testContext.assertEquals(message.getPassThrough(), Message.PASS_THROUGH_ENABLED);
+                testContext.assertNotNull(message.getPayload());
+                testContext.assertEquals(message.getPassThrough(), passThrough ? Message.PASS_THROUGH_ENABLED : Message.PASS_THROUGH_DISABLED);
                 testContext.assertEquals(message.getNotifyForeground(), Message.NOTIFY_FOREGROUND_DISABLE);
                 testContext.assertEquals(message.getConnpt(), Message.CONNPT_WIFI);
                 testContext.assertEquals(message.getNotifyType(), Message.NOTIFY_TYPE_DEFAULT_VIBRATE);
@@ -401,6 +406,7 @@ public class ApiHandlerImplTest {
         request.setVersionsExcept(versionsOut);
         request.setDelayMs(delayMs);
         request.setGlobal(global);
+        request.setPassThroughNotification(passThroughNotification);
         vertx.createHttpClient().post(8080, "localhost", ApiVerticle.ROUTE_TEST, httpClientResponse -> {
             async.countDown();
         })

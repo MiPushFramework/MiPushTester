@@ -51,13 +51,13 @@ public class SendPushFragment extends PreferenceFragment implements Callback {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preference_send_push);
         updateUriLimitStatus(null);
-        updateSoundUriLimitStatus(null);
+        updatePassThroughLimitStatus(null);
         findPreference("click_type").setOnPreferenceChangeListener((preference, newValue) -> {
             updateUriLimitStatus(newValue);
             return true;
         });
         findPreference("pass_through").setOnPreferenceChangeListener((preference, newValue) -> {
-            updateSoundUriLimitStatus(Boolean.parseBoolean(newValue.toString()));
+            updatePassThroughLimitStatus(Boolean.parseBoolean(newValue.toString()));
             return true;
         });
         SimpleMenuPreference limitLocale = (SimpleMenuPreference) findPreference("limit_locale");
@@ -87,8 +87,10 @@ public class SendPushFragment extends PreferenceFragment implements Callback {
         findPreference("click_url").setEnabled("1".equals(newValue == null ? ((SimpleMenuPreference) findPreference("click_type")).getValue() : newValue));
     }
 
-    private void updateSoundUriLimitStatus(@Nullable Boolean passThrough) {
+    private void updatePassThroughLimitStatus(@Nullable Boolean passThrough) {
         findPreference("sound_uri").setEnabled(!(passThrough == null ? ((SwitchPreference) findPreference("pass_through")).isChecked() :
+                passThrough));
+        findPreference("pass_through_notification").setEnabled((passThrough == null ? ((SwitchPreference) findPreference("pass_through")).isChecked() :
                 passThrough));
     }
 
@@ -198,6 +200,7 @@ public class SendPushFragment extends PreferenceFragment implements Callback {
             request.setSoundUri("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/centaurus");
         }
         request.setGlobal(((SwitchPreference) findPreference("global")).isChecked());
+        request.setPassThroughNotification(((SwitchPreference) findPreference("pass_through_notification")).isChecked());
 
         stopTask();
         mTask = new PushTask(this, request);

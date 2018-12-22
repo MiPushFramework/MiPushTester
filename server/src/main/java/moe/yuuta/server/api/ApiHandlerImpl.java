@@ -3,6 +3,7 @@ package moe.yuuta.server.api;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -84,18 +85,21 @@ public class ApiHandlerImpl implements ApiHandler {
                 routingContext.response().setStatusCode(400).end();
                 return;
             }
-            String title = Resources.getString("push_title", routingContext);
-            String ticker = Resources.getString("push_ticker", routingContext);
-            String description = Resources.getString("push_description", routingContext,
-                    new SimpleDateFormat("HH:mm:ss", Locale.CHINA).format(Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai")).getTime()));
             Message message = new Message();
-            message.setTicker(ticker);
+            if (!request.isPassThrough() || request.isPassThroughNotification()) {
+                String title = Resources.getString("push_title", routingContext);
+                String ticker = Resources.getString("push_ticker", routingContext);
+                String description = Resources.getString("push_description", routingContext,
+                        new SimpleDateFormat("HH:mm:ss", Locale.CHINA).format(Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai")).getTime()));
+                message.setTicker(ticker);
+                message.setTitle(title);
+                message.setDescription(description);
+            }
+            // Payload is required for pass through messages
+            message.setPayload(new Date().toString());
             message.setRestrictedPackageName(routingContext.request().getHeader(Constants.HEADER_PRODUCT));
-            // FIXME
             message.setPassThrough(request.isPassThrough() ? Message.PASS_THROUGH_ENABLED :
                     Message.PASS_THROUGH_DISABLED);
-            message.setTitle(title);
-            message.setDescription(description);
             message.setNotifyForeground(request.isNotifyForeground() ? Message.NOTIFY_FOREGROUND_ENABLE :
                     Message.NOTIFY_FOREGROUND_DISABLE);
             message.setConnpt(request.isEnforceWifi() ? Message.CONNPT_WIFI : null);

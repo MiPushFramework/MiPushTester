@@ -49,6 +49,16 @@ class PushRequest {
     private Map<String, String> extras;
     @SerializedName("global")
     private boolean global;
+    @SerializedName("pass_through_notification")
+    private boolean passThroughNotification;
+
+    public boolean isPassThroughNotification() {
+        return passThroughNotification;
+    }
+
+    public void setPassThroughNotification(boolean passThroughNotification) {
+        this.passThroughNotification = passThroughNotification;
+    }
 
     public boolean isGlobal() {
         return global;
