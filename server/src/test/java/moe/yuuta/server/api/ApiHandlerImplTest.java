@@ -37,7 +37,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 @RunWith(VertxUnitRunner.class)
 public class ApiHandlerImplTest {
     private interface SendPushCallback {
-        void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler);
+        void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler);
     }
 
     private interface GetLatestReleaseCallback {
@@ -56,11 +56,11 @@ public class ApiHandlerImplTest {
         apiHandler = Mockito.spy(ApiHandler.apiHandler(vertx));
         Mockito.when(apiHandler.getMiPushApi()).thenReturn(new MiPushApi(null) {
             @Override
-            public void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
+            public void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
                 if (sendPushCallback == null) {
-                    super.pushOnceToId(message, regIds, customExtras, handler);
+                    super.pushOnceToId(message, regIds, customExtras, useGlobal, handler);
                 } else {
-                    sendPushCallback.pushOnceToId(message, regIds, customExtras, handler);
+                    sendPushCallback.pushOnceToId(message, regIds, customExtras, useGlobal, handler);
                 }
             }
         });
@@ -350,9 +350,10 @@ public class ApiHandlerImplTest {
         final String requestVersion = "Haoye1.0";
         final String requestLocale = "zh_TW";
         final String packageName = "android.sms";
+        final boolean global = true;
 
         // TODO: Test multiple situations for variety arguments (e.g. display)
-        this.sendPushCallback = (Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) -> {
+        this.sendPushCallback = (Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) -> {
                 testContext.assertNotNull(message);
                 testContext.assertEquals(message.getTitle(), Resources.getString("push_title", Locale.ENGLISH));
                 testContext.assertEquals(message.getTicker(), Resources.getString("push_ticker", Locale.ENGLISH));
@@ -378,6 +379,7 @@ public class ApiHandlerImplTest {
                 // TODO: Add time check
                 // testContext.assertEquals(message.getTimeToSend(), delayMs);
                 testContext.assertNotEquals(message.getTimeToSend(), 0);
+                testContext.assertEquals(global, useGlobal);
                 async.complete();
             };
         // TODO: Add extras test
@@ -398,6 +400,7 @@ public class ApiHandlerImplTest {
         request.setVersions(versionsIn);
         request.setVersionsExcept(versionsOut);
         request.setDelayMs(delayMs);
+        request.setGlobal(global);
         vertx.createHttpClient().post(8080, "localhost", ApiVerticle.ROUTE_TEST, httpClientResponse -> {
             async.countDown();
         })

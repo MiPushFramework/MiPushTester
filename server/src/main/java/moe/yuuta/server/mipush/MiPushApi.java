@@ -16,7 +16,8 @@ import moe.yuuta.server.formprocessor.HttpForm;
 
 // TODO: Add tests
 public class MiPushApi {
-    private static final String HOST = "api.xmpush.xiaomi.com";
+    private static final String HOST_CHINA = "api.xmpush.xiaomi.com";
+    private static final String HOST_GLOBAL = "api.xmpush.global.xiaomi.com";
 
     private HttpClient httpClient;
 
@@ -24,7 +25,7 @@ public class MiPushApi {
         this.httpClient = httpClient;
     }
 
-    public void pushOnceToId (Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
+    public void pushOnceToId (Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
         Buffer arguments = HttpForm.toBuffer(message);
         StringBuilder regIdArgumentBuilder = new StringBuilder();
         for (int i = 0; i < regIds.length; i ++) {
@@ -47,17 +48,17 @@ public class MiPushApi {
             extras = extras.substring(0, extras.length() - 1);
             arguments.appendString("&" + extras);
         }
-        generateHttpCall(HttpMethod.POST, "/v3/message/regid")
+        generateHttpCall(HttpMethod.POST, "/v3/message/regid", useGlobal)
                 .as(BodyCodec.json(SendMessageResponse.class))
                 .putHeader("Content-Type", "application/x-www-form-urlencoded")
                 .sendBuffer(arguments, handler);
     }
 
-    private HttpRequest<Buffer> generateHttpCall (HttpMethod method, String path) {
+    private HttpRequest<Buffer> generateHttpCall (HttpMethod method, String path, boolean useGlobal) {
         WebClient webClient = WebClient.wrap(httpClient);
         return webClient.request(method, new RequestOptions()
                                         .setPort(443)
-                                        .setHost(HOST)
+                                        .setHost(useGlobal ? HOST_GLOBAL : HOST_CHINA)
                                         .setSsl(true)
                                         .setURI(path))
                 .putHeader("Authorization", "key=" + System.getenv("MIPUSH_AUTH"));

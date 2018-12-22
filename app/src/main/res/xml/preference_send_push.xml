@@ -28,6 +28,11 @@
         android:title="@string/send_push_sound_uri"
         android:summary="@string/send_push_sound_uri_summary"
         android:defaultValue="false" />
+    <SwitchPreference
+        android:key="global"
+        android:title="@string/send_push_global"
+        android:summary="@string/send_push_global_summary"
+        android:defaultValue="false" />
     <PreferenceCategory
         android:title="@string/send_push_click_action">
         <SimpleMenuPreference

@@ -47,6 +47,16 @@ class PushRequest {
     private List<String> versionsExcept; // Version name
     @SerializedName("extras")
     private Map<String, String> extras;
+    @SerializedName("global")
+    private boolean global;
+
+    public boolean isGlobal() {
+        return global;
+    }
+
+    public void setGlobal(boolean global) {
+        this.global = global;
+    }
 
     public String getRegistrationId() {
         return registrationId;

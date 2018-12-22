@@ -147,6 +147,7 @@ public class ApiHandlerImpl implements ApiHandler {
             getMiPushApi().pushOnceToId(message,
                     new String[]{ request.getRegistrationId() },
                     extras,
+                    request.isGlobal(),
                     ar -> {
                 if (ar.succeeded()) {
                     SendMessageResponse response = ar.result().body();

@@ -40,7 +40,7 @@ public class PushRequestVerifyTest {
         apiHandler = Mockito.spy(ApiHandler.apiHandler(vertx));
         Mockito.when(apiHandler.getMiPushApi()).thenReturn(new MiPushApi(null) {
             @Override
-            public void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
+            public void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
                 if (!nextApiCallShouldOK)
                     testContext.fail("Unaccepted call");
                 else

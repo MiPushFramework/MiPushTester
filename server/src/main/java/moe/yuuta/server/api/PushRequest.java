@@ -62,6 +62,8 @@ class PushRequest {
     private List<String> versionsExcept; // Version name
     @JsonProperty("extras")
     private Map<String, String> extras;
+    @JsonProperty("global")
+    private boolean global;
 
     Map<String, String> getExtras() {
         return extras;
@@ -131,6 +133,10 @@ class PushRequest {
         return delayMs;
     }
 
+    boolean isGlobal() {
+        return global;
+    }
+
     public void setRegistrationId(String registrationId) {
         this.registrationId = registrationId;
     }
@@ -197,5 +203,9 @@ class PushRequest {
 
     public void setExtras(Map<String, String> extras) {
         this.extras = extras;
+    }
+
+    public void setGlobal(boolean global) {
+        this.global = global;
     }
 }

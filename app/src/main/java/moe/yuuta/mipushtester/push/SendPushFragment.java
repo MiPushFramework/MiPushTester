@@ -197,6 +197,7 @@ public class SendPushFragment extends PreferenceFragment implements Callback {
         if (((SwitchPreference) findPreference("sound_uri")).isChecked()) {
             request.setSoundUri("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/centaurus");
         }
+        request.setGlobal(((SwitchPreference) findPreference("global")).isChecked());
 
         stopTask();
         mTask = new PushTask(this, request);

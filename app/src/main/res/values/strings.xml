@@ -83,6 +83,8 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+    <string name="send_push_global">Use Global server</string>
+    <string name="send_push_global_summary">Switch to global MiPush server, it may improve message receiving if you are not in China</string>
     <!-- Message detail -->
     <string name="detail">Message ID: %1$s\n\nMiPushTester custom Extras: %2$s\n\nMiPush Extras: \n%3$s\n\nPass Through: %4$s\n\nFull message:\n%5$s</string>
     <string name="detail_title">Message Detail</string>
