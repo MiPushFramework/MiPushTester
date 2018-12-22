@@ -9,8 +9,8 @@ import static io.vertx.core.http.HttpMethod.GET;
 import static io.vertx.core.http.HttpMethod.POST;
 
 public class ApiVerticle extends AbstractVerticle {
-    private static final String ROUTE = "/";
-    private static final String ROUTE_TEST = ROUTE + "test";
+    static final String ROUTE = "/";
+    static final String ROUTE_TEST = ROUTE + "test";
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -26,9 +26,13 @@ public class ApiVerticle extends AbstractVerticle {
     }
 
     private void registerRoutes (Router router) {
-        ApiHandler handler = ApiHandler.apiHandler(vertx);
+        ApiHandler handler = getApiHandler();
         router.route(POST, ROUTE_TEST).handler(handler::handlePush);
         router.route(GET, ROUTE).handler(handler::handleFrameworkIndex);
         router.route(GET, ROUTE_TEST).handler(handler::handleTesterIndex);
+    }
+
+    ApiHandler getApiHandler () {
+        return ApiHandler.apiHandler(vertx);
     }
 }

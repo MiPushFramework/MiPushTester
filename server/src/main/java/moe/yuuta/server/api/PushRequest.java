@@ -130,4 +130,72 @@ class PushRequest {
     int getDelayMs() {
         return delayMs;
     }
+
+    public void setRegistrationId(String registrationId) {
+        this.registrationId = registrationId;
+    }
+
+    public void setDelayMs(int delayMs) {
+        this.delayMs = delayMs;
+    }
+
+    public void setPassThrough(boolean passThrough) {
+        this.passThrough = passThrough;
+    }
+
+    public void setNotifyForeground(boolean notifyForeground) {
+        this.notifyForeground = notifyForeground;
+    }
+
+    public void setEnforceWifi(boolean enforceWifi) {
+        this.enforceWifi = enforceWifi;
+    }
+
+    public void setDisplay(int display) {
+        this.display = display;
+    }
+
+    public void setNotifyId(int notifyId) {
+        this.notifyId = notifyId;
+    }
+
+    public void setSoundUri(String soundUri) {
+        this.soundUri = soundUri;
+    }
+
+    public void setCallback(String callback) {
+        this.callback = callback;
+    }
+
+    public void setClickAction(String clickAction) {
+        this.clickAction = clickAction;
+    }
+
+    public void setLocales(List<String> locales) {
+        this.locales = locales;
+    }
+
+    public void setLocalesExcept(List<String> localesExcept) {
+        this.localesExcept = localesExcept;
+    }
+
+    public void setModels(List<String> models) {
+        this.models = models;
+    }
+
+    public void setModelsExcept(List<String> modelsExcept) {
+        this.modelsExcept = modelsExcept;
+    }
+
+    public void setVersions(List<String> versions) {
+        this.versions = versions;
+    }
+
+    public void setVersionsExcept(List<String> versionsExcept) {
+        this.versionsExcept = versionsExcept;
+    }
+
+    public void setExtras(Map<String, String> extras) {
+        this.extras = extras;
+    }
 }

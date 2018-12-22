@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -25,9 +24,32 @@ import static moe.yuuta.common.Constants.DISPLAY_ALL;
 import static moe.yuuta.common.Constants.DISPLAY_LIGHTS;
 import static moe.yuuta.common.Constants.DISPLAY_SOUND;
 import static moe.yuuta.common.Constants.DISPLAY_VIBRATE;
+import static moe.yuuta.server.api.ApiUtils.separateListToComma;
 
 public class ApiHandlerImpl implements ApiHandler {
     private final Logger logger = LoggerFactory.getLogger(ApiHandlerImpl.class.getSimpleName());
+
+    static final String HTML_FRAMEWORK_INDEX = "<html>" +
+            "<head>" +
+            "<title>MiPushFramework</title>" +
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+            "</head>" +
+            "<body>" +
+            "<p>Homepage is still under construction, check it back later.</p>" +
+            "<a href=\"https://github.com/Trumeet/MiPushFramework\">GitHub</a>" +
+            "</body>" +
+            "</html>";
+
+    static final String HTML_TESTER_INDEX = "<html>" +
+            "<head>" +
+            "<title>MiPush Tester</title>" +
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+            "</head>" +
+            "<body>" +
+            "<p>Homepage is still under construction, check it back later.</p>" +
+            "<a href=\"https://github.com/Trumeet/MiPushTester\">GitHub</a>" +
+            "</body>" +
+            "</html>";
 
     private Vertx vertx;
 
@@ -40,16 +62,7 @@ public class ApiHandlerImpl implements ApiHandler {
         routingContext.response()
                 .putHeader("Content-Type", "text/html")
                 .setStatusCode(200)
-                .end("<html>" +
-                        "<head>" +
-                        "<title>MiPushFramework</title>" +
-                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                        "</head>" +
-                        "<body>" +
-                        "<p>Homepage is still under construction, check it back later.</p>" +
-                        "<a href=\"https://github.com/Trumeet/MiPushFramework\">GitHub</a>" +
-                        "</body>" +
-                        "</html>");
+                .end(HTML_FRAMEWORK_INDEX);
     }
 
     @Override
@@ -147,19 +160,9 @@ public class ApiHandlerImpl implements ApiHandler {
         });
     }
 
-    private MiPushApi getMiPushApi () {
+    @Override
+    public MiPushApi getMiPushApi () {
         return new MiPushApi(vertx.createHttpClient());
-    }
-
-    private String separateListToComma(List<String> list) {
-        StringBuilder builder = new StringBuilder();
-        for (String value : list) {
-            builder.append(value);
-            builder.append(",");
-        }
-        String values = builder.toString();
-        values = values.substring(0, values.length() - 1);
-        return values;
     }
 
     @Override
@@ -167,15 +170,6 @@ public class ApiHandlerImpl implements ApiHandler {
         routingContext.response()
                 .putHeader("Content-Type", "text/html")
                 .setStatusCode(200)
-                .end("<html>" +
-                        "<head>" +
-                        "<title>MiPush Tester</title>" +
-                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                        "</head>" +
-                        "<body>" +
-                        "<p>Homepage is still under construction, check it back later.</p>" +
-                        "<a href=\"https://github.com/Trumeet/MiPushTester\">GitHub</a>" +
-                        "</body>" +
-                        "</html>");
+                .end(HTML_TESTER_INDEX);
     }
 }

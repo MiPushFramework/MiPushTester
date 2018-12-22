@@ -14,6 +14,7 @@ import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.codec.BodyCodec;
 import moe.yuuta.server.formprocessor.HttpForm;
 
+// TODO: Add tests
 public class MiPushApi {
     private static final String HOST = "api.xmpush.xiaomi.com";
 

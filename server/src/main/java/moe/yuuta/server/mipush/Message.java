@@ -1,5 +1,7 @@
 package moe.yuuta.server.mipush;
 
+import java.util.Objects;
+
 import moe.yuuta.server.formprocessor.FormData;
 
 @SuppressWarnings("unused")
@@ -295,5 +297,42 @@ public class Message {
         this.title = title;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return passThrough == message.passThrough &&
+                timeToLive == message.timeToLive &&
+                timeToSend == message.timeToSend &&
+                notifyId == message.notifyId &&
+                notifyForeground == message.notifyForeground &&
+                flowControl == message.flowControl &&
+                layoutName == message.layoutName &&
+                layoutValue == message.layoutValue &&
+                notifyType == message.notifyType &&
+                Objects.equals(title, message.title) &&
+                Objects.equals(payload, message.payload) &&
+                Objects.equals(restrictedPackageName, message.restrictedPackageName) &&
+                Objects.equals(description, message.description) &&
+                Objects.equals(soundUri, message.soundUri) &&
+                Objects.equals(ticker, message.ticker) &&
+                Objects.equals(notifyEffect, message.notifyEffect) &&
+                Objects.equals(jobKey, message.jobKey) &&
+                Objects.equals(callback, message.callback) &&
+                Objects.equals(locale, message.locale) &&
+                Objects.equals(localeNotIn, message.localeNotIn) &&
+                Objects.equals(model, message.model) &&
+                Objects.equals(modelNotIn, message.modelNotIn) &&
+                Objects.equals(appVersion, message.appVersion) &&
+                Objects.equals(appVersionNotIn, message.appVersionNotIn) &&
+                Objects.equals(connpt, message.connpt) &&
+                Objects.equals(intentUri, message.intentUri) &&
+                Objects.equals(webUri, message.webUri);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, payload, restrictedPackageName, passThrough, description, timeToLive, timeToSend, notifyId, soundUri, ticker, notifyForeground, notifyEffect, flowControl, layoutName, layoutValue, jobKey, callback, locale, localeNotIn, model, modelNotIn, appVersion, appVersionNotIn, connpt, notifyType, intentUri, webUri);
+    }
 }

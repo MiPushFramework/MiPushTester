@@ -11,8 +11,12 @@ import io.vertx.ext.web.RoutingContext;
 import static moe.yuuta.common.Constants.HEADER_LOCALE;
 
 public class Resources {
+    static ResourceBundle getBundle (Locale locale) {
+        return ResourceBundle.getBundle("strings", locale);
+    }
+
     public static String getString (String key, Locale locale, Object... formatArgs) {
-        ResourceBundle strings = ResourceBundle.getBundle("strings", locale);
+        ResourceBundle strings = getBundle(locale);
         return String.format(getStringInBundleInUTF8(key, strings), formatArgs);
     }
 

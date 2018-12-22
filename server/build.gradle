@@ -1,19 +1,33 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 group 'moe.yuuta'
 version '1.0'
 
 sourceCompatibility = 1.8
+
+junitPlatform {
+    filters {
+        engines {
+        }
+        tags {
+            exclude 'slow'
+        }
+    }
+    logManager 'org.apache.logging.log4j.jul.LogManager'
+}
 
 repositories {
     mavenCentral()
@@ -25,6 +39,11 @@ dependencies {
     compile "io.vertx:vertx-web:$vertxVersion"
     compile "io.vertx:vertx-web-client:$vertxVersion"
     compile project(':common')
+    testCompile("junit:junit:4.12")
+    testCompile "io.vertx:vertx-unit:$vertxVersion"
+    testCompile "org.mockito:mockito-core:2.8.9"
+    testCompile "org.powermock:powermock-module-junit4:1.7.1"
+    testCompile "org.powermock:powermock-api-mockito2:1.7.1"
 }
 
 jar {
