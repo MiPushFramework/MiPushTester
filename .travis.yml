@@ -16,8 +16,8 @@ script:
 # The plugin will build it and publish it, we currently don't have
 # a way to upload an existing apk.
 # See https://github.com/Triple-T/gradle-play-publisher/issues/360
-# TODO: But in non-master branches, it will still be published.....
-- "./gradlew :app:publishReleaseApk --daemon --parallel"
+- chmod a+x ./tools/ci_build.sh
+- ./tools/ci_build.sh
 before_install:
 - yes | sdkmanager "platforms;android-28"
 - chmod a+x gradlew
