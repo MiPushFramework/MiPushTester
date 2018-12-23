@@ -13,7 +13,11 @@ cache:
   - "$HOME/.gradle/wrapper/"
 script:
 - "./gradlew exportVersion --daemon"
-- "./gradlew :app:assembleRelease --daemon --parallel"
+# The plugin will build it and publish it, we currently don't have
+# a way to upload an existing apk.
+# See https://github.com/Triple-T/gradle-play-publisher/issues/360
+# TODO: But in non-master branches, it will still be published.....
+- "./gradlew :app:publishReleaseApk --daemon --parallel"
 before_install:
 - yes | sdkmanager "platforms;android-28"
 - chmod a+x gradlew
@@ -36,5 +40,3 @@ deploy:
   file: app/build/outputs/apk/release/app.apk
   on:
     repo: Trumeet/MiPushTester
-after_deploy:
-- ./gradlew :app:promoteReleaseArtifact --daemon
