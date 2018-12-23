@@ -35,3 +35,5 @@ deploy:
   file: app/build/outputs/apk/release/app.apk
   on:
     repo: Trumeet/MiPushTester
+after_deploy:
+- ./gradlew :app:promoteReleaseArtifact --daemon

@@ -1,6 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
+if (file("play-store-api.json").exists()) {
+    apply plugin: 'com.github.triplet.play'
+    play {
+        serviceAccountCredentials = file("play-store-api.json")
+        track = "beta"
+        userFraction = 1.0
+        resolutionStrategy = "ignore"
+    }
+}
+
 def xmpushProperties = new Properties()
 def conf = project.file("xmpush.properties")
 if (conf.exists()) xmpushProperties.load(conf.newDataInputStream())
