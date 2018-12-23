@@ -17,8 +17,8 @@ script:
 before_install:
 - yes | sdkmanager "platforms;android-28"
 - chmod a+x gradlew
-- openssl aes-256-cbc -K $encrypted_7aab63907238_key -iv $encrypted_7aab63907238_iv -in .yuuta.jks.enc -out .yuuta.jks -d
-- echo ${GOOGLE_PLAY_STORE_API_JSON} > app/play-store-api.json
+- openssl aes-256-cbc -K $encrypted_7aab63907238_key -iv $encrypted_7aab63907238_iv -in secrets.tar.enc -out ./secrets.tar -d
+- tar xvf secrets.tar
 before_deploy:
 - export VERSION=$(cat version.txt)
 - export VERSION_CODE=$(cat version_code.txt)
