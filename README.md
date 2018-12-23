@@ -1,5 +1,5 @@
-<div style="text-align:center">
-<p><a href="https://hub.docker.com/r/thnuiwelr/mipush/"><img src="https://img.shields.io/docker/build/thnuiwelr/mipush.svg" alt="" /></a>
+<p align="center">
+<a href="https://hub.docker.com/r/thnuiwelr/mipush/"><img src="https://img.shields.io/docker/build/thnuiwelr/mipush.svg" alt="" /></a>
 <a href="https://hub.docker.com/r/thnuiwelr/mipush/"><img src="https://img.shields.io/docker/pulls/thnuiwelr/mipush.svg" alt="" /></a>
 <a href="https://hub.docker.com/r/thnuiwelr/mipush/"><img src="https://img.shields.io/microbadger/image-size/thnuiwelr/mipush.svg" alt="" /></a>
 <a href="https://travis-ci.org/Trumeet/MiPushTester"><img src="https://travis-ci.org/Trumeet/MiPushTester.svg?branch=master" alt="Build Status" /></a>
@@ -10,7 +10,7 @@
 <a href="https://github.com/Trumeet/MiPushTester/pulls"><img src="https://img.shields.io/github/issues-pr/Trumeet/MiPushTester.svg" alt="Open PR" /></a>
 <a href="https://github.com/Trumeet/MiPushTester/stargazers"><img src="https://img.shields.io/github/stars/Trumeet/MiPushTester.svg?label=Stars&amp;style=social" alt="Stars" /></a>
 <a href="https://status.yuuta.moe/781665748"><img src="https://img.shields.io/uptimerobot/ratio/7/m781665748-4f4339573e81d66d561994f8.svg" alt="Web Status" /></a></p>
-</div>
+</p>
 
 # MiPush Tester (Alpha)
 
