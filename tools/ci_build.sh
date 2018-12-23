@@ -1,7 +1,6 @@
 #!/bin/sh
-BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
-echo "Current branch is ${BRANCH}"
-if [ "$BRANCH" = "master" ]
+echo "Current branch is ${TRAVIS_BRANCH}"
+if [ "$TRAVIS_BRANCH" = "master" ]
 then
     echo "Building & publishing"
     ./gradlew :app:publishReleaseApk --daemon --parallel
