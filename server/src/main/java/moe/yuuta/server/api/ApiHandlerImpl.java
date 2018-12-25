@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
@@ -22,6 +24,7 @@ import moe.yuuta.server.mipush.Message;
 import moe.yuuta.server.mipush.MiPushApi;
 import moe.yuuta.server.mipush.SendMessageResponse;
 import moe.yuuta.server.res.Resources;
+import moe.yuuta.server.topic.TopicRegistry;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 import static moe.yuuta.common.Constants.DISPLAY_ALL;
@@ -63,10 +66,12 @@ public class ApiHandlerImpl implements ApiHandler {
 
     @Override
     public void handleFrameworkIndex(RoutingContext routingContext) {
-        routingContext.response()
-                .putHeader("Content-Type", "text/html")
-                .setStatusCode(200)
-                .end(HTML_FRAMEWORK_INDEX);
+        HttpServerResponse response = routingContext.response();
+        if (!response.ended() && !response.closed()) {
+            response.putHeader("Content-Type", "text/html")
+                    .setStatusCode(200)
+                    .end(HTML_FRAMEWORK_INDEX);
+        }
     }
 
     @Override
@@ -76,13 +81,19 @@ public class ApiHandlerImpl implements ApiHandler {
             try {
                 request = ApiUtils.jsonToObject(buffer.toString(), PushRequest.class);
             } catch (IOException e) {
-                routingContext.response().setStatusCode(400).end();
+                HttpServerResponse response = routingContext.response();
+                if (!response.ended() && !response.closed()) {
+                    response.setStatusCode(400).end();
+                }
                 return;
             }
             if ((request.getExtras() != null && request.getExtras().size() > 10) ||
                     !DataVerifier.verify(request) ||
                     routingContext.request().getHeader(Constants.HEADER_PRODUCT) == null) {
-                routingContext.response().setStatusCode(400).end();
+                HttpServerResponse response = routingContext.response();
+                if (!response.ended() && !response.closed()) {
+                    response.setStatusCode(400).end();
+                }
                 return;
             }
             Message message = new Message();
@@ -155,15 +166,19 @@ public class ApiHandlerImpl implements ApiHandler {
                     ar -> {
                 if (ar.succeeded()) {
                     SendMessageResponse response = ar.result().body();
-                    routingContext.response()
-                            .setStatusCode(response.getCode() == SendMessageResponse.CODE_SUCCESS ?
-                                    NO_CONTENT.code() : 500)
-                            .end();
+                    HttpServerResponse httpResponse = routingContext.response();
+                    if (!httpResponse.ended() && !httpResponse.closed()) {
+                        httpResponse.setStatusCode(response.getCode() == SendMessageResponse.CODE_SUCCESS ?
+                                        NO_CONTENT.code() : 500)
+                                .end();
+                    }
                 } else {
                     logger.error("Cannot send message", ar.cause());
-                    routingContext.response()
-                            .setStatusCode(500)
-                            .end();
+                    HttpServerResponse response = routingContext.response();
+                    if (!response.ended() && !response.closed()) {
+                        response.setStatusCode(500)
+                                .end();
+                    }
                 }
             });
         });
@@ -176,17 +191,22 @@ public class ApiHandlerImpl implements ApiHandler {
 
     @Override
     public void handleTesterIndex(RoutingContext routingContext) {
-        routingContext.response()
-                .putHeader("Content-Type", "text/html")
-                .setStatusCode(200)
-                .end(HTML_TESTER_INDEX);
+        HttpServerResponse response = routingContext.response();
+        if (!response.ended() && !response.closed()) {
+            response.putHeader("Content-Type", "text/html")
+                    .setStatusCode(200)
+                    .end(HTML_TESTER_INDEX);
+        }
     }
 
     @Override
     public void handleUpdate(RoutingContext routingContext) {
         final String productId = routingContext.request().getHeader(Constants.HEADER_PRODUCT);
         if (productId == null) {
-            routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+            HttpServerResponse response = routingContext.response();
+            if (!response.ended() && !response.closed()) {
+                response.setStatusCode(NO_CONTENT.code()).end();
+            }
             return;
         }
         String repo;
@@ -203,7 +223,10 @@ public class ApiHandlerImpl implements ApiHandler {
                 break;
             default:
                 logger.warn("An unknown client is attempting to get update status: " + productId);
-                routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+                HttpServerResponse response = routingContext.response();
+                if (!response.ended() && !response.closed()) {
+                    response.setStatusCode(NO_CONTENT.code()).end();
+                }
                 return;
         }
         getGitHubApi().getLatestRelease(owner, repo, ar -> {
@@ -214,7 +237,10 @@ public class ApiHandlerImpl implements ApiHandler {
                     || release.getTagName() == null
                     || release.getName().trim().equals("")
                     || release.getTagName().trim().equals("")) {
-                    routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+                    HttpServerResponse response = routingContext.response();
+                    if (!response.ended() && !response.closed()) {
+                        response.setStatusCode(NO_CONTENT.code()).end();
+                    }
                 } else {
                     Update update = new Update();
                     update.setHtmlLink(release.getHtmlUrl());
@@ -224,18 +250,22 @@ public class ApiHandlerImpl implements ApiHandler {
                         update.setVersionCode(Integer.MAX_VALUE);
                     }
                     update.setVersionName(release.getName());
-                    routingContext.response()
-                            .putHeader("Content-Type", "application/json")
-                            .setChunked(true)
-                            .setStatusCode(200)
-                            .end(ApiUtils.tryObjectToJson(update));
+                    HttpServerResponse response = routingContext.response();
+                    if (!response.ended() && !response.closed()) {
+                        response.putHeader("Content-Type", "application/json")
+                                .setChunked(true)
+                                .setStatusCode(200)
+                                .end(ApiUtils.tryObjectToJson(update));
+                    }
                 }
             } else {
                 logger.error("Unable to get update", ar.cause());
-                routingContext.response()
-                        .setChunked(true)
-                        .setStatusCode(500)
-                        .end();
+                HttpServerResponse response = routingContext.response();
+                if (!response.ended() && !response.closed()) {
+                    response.setChunked(true)
+                            .setStatusCode(500)
+                            .end();
+                }
             }
         });
     }
@@ -243,5 +273,27 @@ public class ApiHandlerImpl implements ApiHandler {
     @Override
     public GitHubApi getGitHubApi() {
         return new GitHubApi(vertx.createHttpClient());
+    }
+
+    @Override
+    public void handleGetTopicList(RoutingContext routingContext) {
+        HttpServerResponse response = routingContext.response();
+        if (!response.ended() && !response.closed()) {
+            response.setChunked(true)
+                    .setStatusCode(200)
+                    .putHeader("Content-Type", "application/json")
+                    .end(ApiUtils.tryObjectToJson(TopicRegistry
+                            .getInstance()
+                            .allTopics()
+                            .stream()
+                            .peek(topic -> {
+                                topic.setTitle(Resources.getString(topic.getTitleResource(),
+                                        routingContext));
+                                topic.setDescription(Resources.getString(topic.getDescriptionResource(),
+                                        routingContext));
+                            })
+                            .collect(Collectors.toList())
+                    ));
+        }
     }
 }

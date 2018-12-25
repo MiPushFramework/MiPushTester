@@ -99,4 +99,10 @@
     <string name="view">View</string>
     <!-- Push Receiver -->
     <string name="push_receiver_pass_through_received">Pass through message received, id: %1$s</string>
+    <!-- Topics -->
+    <string name="title_topics">Topics</string>
+    <string name="topic_action_browse">Discover topics</string>
+    <string name="topic_action_title">Subscribe topics</string>
+    <string name="topic_action_description">Subscribe some topics provided by the author, I\'ll send some messages to these topics</string>
+    <string name="error_load_topics">Cannot retain topics</string>
 </resources>

@@ -13,9 +13,17 @@
         <action
             android:id="@+id/action_mainFragment_to_sendPushFragment"
             app:destination="@id/sendPushFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_topicSubscriptionFragment"
+            app:destination="@id/topicSubscriptionFragment" />
     </fragment>
     <fragment
         android:id="@+id/sendPushFragment"
         android:name="moe.yuuta.mipushtester.push.SendPushFragment"
         android:label="@string/push_card_title" />
+    <fragment
+        android:id="@+id/topicSubscriptionFragment"
+        android:name="moe.yuuta.mipushtester.topic.TopicSubscriptionFragment"
+        android:label="@string/title_topics"
+        tools:layout="@layout/fragment_topic_subscription" />
 </navigation>

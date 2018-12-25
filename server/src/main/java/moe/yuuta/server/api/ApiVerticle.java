@@ -12,6 +12,7 @@ public class ApiVerticle extends AbstractVerticle {
     static final String ROUTE = "/";
     static final String ROUTE_TEST = ROUTE + "test";
     static final String ROUTE_UPDATE = ROUTE + "update";
+    static final String ROUTE_TEST_TOPIC = ROUTE_TEST + "/topic";
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -32,6 +33,7 @@ public class ApiVerticle extends AbstractVerticle {
         router.route(GET, ROUTE).handler(handler::handleFrameworkIndex);
         router.route(GET, ROUTE_TEST).handler(handler::handleTesterIndex);
         router.route(GET, ROUTE_UPDATE).handler(handler::handleUpdate);
+        router.route(GET, ROUTE_TEST_TOPIC).handler(handler::handleGetTopicList);
     }
 
     ApiHandler getApiHandler () {

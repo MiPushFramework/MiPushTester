@@ -25,6 +25,20 @@ public class MiPushApi {
         this.httpClient = httpClient;
     }
 
+    private static String buildExtras (Map<String, String> customExtras) {
+        StringBuilder extrasBuilder = new StringBuilder();
+        for (String key : customExtras.keySet()) {
+            extrasBuilder.append("extra.");
+            extrasBuilder.append(key);
+            extrasBuilder.append("=");
+            extrasBuilder.append(customExtras.get(key));
+            extrasBuilder.append("&");
+        }
+        String extras = extrasBuilder.toString();
+        extras = extras.substring(0, extras.length() - 1);
+        return extras;
+    }
+
     public void pushOnceToId (Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
         Buffer arguments = HttpForm.toBuffer(message);
         StringBuilder regIdArgumentBuilder = new StringBuilder();
@@ -36,19 +50,21 @@ public class MiPushApi {
         }
         arguments.appendString("&registration_id=" + regIdArgumentBuilder.toString());
         if (customExtras != null) {
-            StringBuilder extrasBuilder = new StringBuilder();
-            for (String key : customExtras.keySet()) {
-                extrasBuilder.append("extra.");
-                extrasBuilder.append(key);
-                extrasBuilder.append("=");
-                extrasBuilder.append(customExtras.get(key));
-                extrasBuilder.append("&");
-            }
-            String extras = extrasBuilder.toString();
-            extras = extras.substring(0, extras.length() - 1);
-            arguments.appendString("&" + extras);
+            arguments.appendString("&" + buildExtras(customExtras));
         }
         generateHttpCall(HttpMethod.POST, "/v3/message/regid", useGlobal)
+                .as(BodyCodec.json(SendMessageResponse.class))
+                .putHeader("Content-Type", "application/x-www-form-urlencoded")
+                .sendBuffer(arguments, handler);
+    }
+
+    public void pushOnceToTopic (Message message, String topic, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
+        Buffer arguments = HttpForm.toBuffer(message);
+        arguments.appendString("&topic=" + topic);
+        if (customExtras != null) {
+            arguments.appendString("&" + buildExtras(customExtras));
+        }
+        generateHttpCall(HttpMethod.POST, "/v3/message/topic", useGlobal)
                 .as(BodyCodec.json(SendMessageResponse.class))
                 .putHeader("Content-Type", "application/x-www-form-urlencoded")
                 .sendBuffer(arguments, handler);

@@ -26,6 +26,8 @@
                 bind:uiHandler="@{uiHandler}" />
             <include layout="@layout/item_send_push"
                 bind:uiHandler="@{uiHandler}" />
+            <include layout="@layout/item_topic_subscription"
+                bind:uiHandler="@{uiHandler}" />
             <include layout="@layout/item_reset"
                 bind:uiHandler="@{uiHandler}" />
         </LinearLayout>

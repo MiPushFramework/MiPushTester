@@ -55,6 +55,11 @@ public class ApiVerticleTest {
             public GitHubApi getGitHubApi() {
                 return null;
             }
+
+            @Override
+            public void handleGetTopicList(RoutingContext routingContext) {
+                routingContext.response().setStatusCode(NO_CONTENT.code()).end();
+            }
         };
         apiVerticle = Mockito.spy(new ApiVerticle());
         Mockito.when(apiVerticle.getApiHandler()).thenReturn(stubApiHandler);
@@ -92,6 +97,15 @@ public class ApiVerticleTest {
     public void shouldGetUpdate (TestContext testContext) {
         Async async = testContext.async();
         vertx.createHttpClient().getNow(8080, "localhost", ApiVerticle.ROUTE_UPDATE, response -> {
+            testContext.assertEquals(response.statusCode(), NO_CONTENT.code());
+            async.complete();
+        });
+    }
+
+    @Test(timeout = 2000)
+    public void shouldGetTopicList (TestContext testContext) {
+        Async async = testContext.async();
+        vertx.createHttpClient().getNow(8080, "localhost", ApiVerticle.ROUTE_TEST_TOPIC, response -> {
             testContext.assertEquals(response.statusCode(), NO_CONTENT.code());
             async.complete();
         });

@@ -5,14 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
@@ -31,9 +35,11 @@ import moe.yuuta.server.mipush.Message;
 import moe.yuuta.server.mipush.MiPushApi;
 import moe.yuuta.server.mipush.SendMessageResponse;
 import moe.yuuta.server.res.Resources;
+import moe.yuuta.server.topic.TopicRegistry;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 
+@PrepareForTest({Resources.class, TopicRegistry.class})
 @RunWith(VertxUnitRunner.class)
 public class ApiHandlerImplTest {
     private interface SendPushCallback {
@@ -431,6 +437,41 @@ public class ApiHandlerImplTest {
                 async.complete();
             });
         });
+    }
+
+    @Test(timeout = 2000)
+    public void handleGetTopicList (TestContext testContext) {
+        Async async = testContext.async();
+        CompositeFuture.all(Future.<CompositeFuture>future(f -> TopicRegistry.getInstance().init(vertx, f)),
+                            Future.future(f -> {
+                                vertx.createHttpClient().get(8080, "localhost", ApiVerticle.ROUTE_TEST_TOPIC, httpClientResponse -> {
+                                    testContext.assertEquals(200, httpClientResponse.statusCode());
+                                    testContext.assertEquals("application/json".trim().toLowerCase(), httpClientResponse.getHeader("Content-Type").trim().toLowerCase());
+                                    httpClientResponse.bodyHandler(buffer -> {
+                                        testContext.assertEquals(ApiUtils.tryObjectToJson(TopicRegistry
+                                                .getInstance()
+                                                .allTopics()
+                                                .stream()
+                                                .peek(topic -> {
+                                                    topic.setTitle(Resources.getString(topic.getTitleResource(),
+                                                            Locale.ENGLISH));
+                                                    topic.setDescription(Resources.getString(topic.getDescriptionResource(),
+                                                            Locale.ENGLISH));
+                                                })
+                                                .collect(Collectors.toList())
+                                        ).trim(), buffer.toString().trim());
+                                        f.complete();
+                                    });
+                                })
+                                .putHeader("Accept-Language", Locale.ENGLISH.toString())
+                                .end();
+                            }),
+                            Future.<CompositeFuture>future(f -> TopicRegistry.getInstance().clear(vertx, f)))
+                .setHandler(ar -> {
+                    testContext.assertTrue(ar.succeeded());
+                    testContext.assertNull(ar.cause());
+                    async.countDown();
+                });
     }
 
     @After

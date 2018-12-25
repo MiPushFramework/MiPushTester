@@ -10,6 +10,7 @@ import moe.yuuta.server.api.PushRequestVerifyTest;
 import moe.yuuta.server.dataverify.DataVerifierTest;
 import moe.yuuta.server.formprocessor.HttpFormTest;
 import moe.yuuta.server.res.ResourcesTest;
+import moe.yuuta.server.topic.TopicRegistryTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -20,7 +21,8 @@ import moe.yuuta.server.res.ResourcesTest;
         ApiUtilsTest.class,
         ApiHandlerImplTest.class,
         HttpFormTest.class,
-        PushRequestVerifyTest.class
+        PushRequestVerifyTest.class,
+        TopicRegistryTest.class
 })
 public class ServerTestSuite {
 }

@@ -34,12 +34,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import moe.yuuta.mipushtester.api.APIManager;
 import moe.yuuta.mipushtester.databinding.FragmentMainBinding;
 import moe.yuuta.mipushtester.log.LogUtils;
-import moe.yuuta.mipushtester.push.APIManager;
 import moe.yuuta.mipushtester.status.RegistrationStatus;
+import moe.yuuta.mipushtester.topic.TopicStore;
 import moe.yuuta.mipushtester.update.Update;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,10 +68,21 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         mRegistrationStatus = RegistrationStatus.get(requireContext());
+        mRegistrationStatus.registered.addOnPropertyChangedCallback(mRestoreSubscriptionListener);
         binding.setStatus(mRegistrationStatus);
         binding.setUiHandler(this);
         return binding.getRoot();
     }
+
+    private Observable.OnPropertyChangedCallback mRestoreSubscriptionListener =new Observable.OnPropertyChangedCallback() {
+        @Override
+        public void onPropertyChanged(Observable sender, int propertyId) {
+            if (mRegistrationStatus.registered.get()) {
+                for (String id : TopicStore.create(requireContext()).getSubscribedIds())
+                    MiPushClient.subscribe(requireContext(), id, null);
+            }
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -204,6 +217,13 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
     @Override
     public void onDestroyView() {
         if (mGetUpdateCall != null) mGetUpdateCall.cancel();
+        mRegistrationStatus.registered.removeOnPropertyChangedCallback(mRestoreSubscriptionListener);
         super.onDestroyView();
+    }
+
+    @Override
+    public void handleSubscribeTopic(View v) {
+        Navigation.findNavController(requireActivity(), R.id.nav_host)
+                .navigate(R.id.action_mainFragment_to_topicSubscriptionFragment);
     }
 }

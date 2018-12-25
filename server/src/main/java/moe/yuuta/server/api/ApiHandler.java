@@ -16,4 +16,5 @@ public interface ApiHandler {
     MiPushApi getMiPushApi ();
     void handleUpdate(RoutingContext routingContext);
     GitHubApi getGitHubApi ();
+    void handleGetTopicList (RoutingContext routingContext);
 }
