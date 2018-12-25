@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.logging.Logger;
@@ -22,6 +23,7 @@ import moe.yuuta.server.mipush.Message;
 import moe.yuuta.server.mipush.MiPushApi;
 import moe.yuuta.server.mipush.SendMessageResponse;
 import moe.yuuta.server.res.Resources;
+import moe.yuuta.server.topic.TopicRegistry;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 import static moe.yuuta.common.Constants.DISPLAY_ALL;
@@ -243,5 +245,25 @@ public class ApiHandlerImpl implements ApiHandler {
     @Override
     public GitHubApi getGitHubApi() {
         return new GitHubApi(vertx.createHttpClient());
+    }
+
+    @Override
+    public void handleGetTopicList(RoutingContext routingContext) {
+        routingContext.response()
+                .setChunked(true)
+                .setStatusCode(200)
+                .putHeader("Content-Type", "application/json")
+                .end(ApiUtils.tryObjectToJson(TopicRegistry
+                        .getInstance()
+                        .allTopics()
+                        .stream()
+                        .peek(topic -> {
+                            topic.setTitle(Resources.getString(topic.getTitleResource(),
+                                    routingContext));
+                            topic.setDescription(Resources.getString(topic.getDescriptionResource(),
+                                    routingContext));
+                        })
+                        .collect(Collectors.toList())
+                        ));
     }
 }

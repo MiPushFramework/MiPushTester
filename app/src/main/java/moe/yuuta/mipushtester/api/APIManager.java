@@ -1,14 +1,17 @@
-package moe.yuuta.mipushtester.push;
+package moe.yuuta.mipushtester.api;
 
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 import com.google.gson.JsonObject;
 
+import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import moe.yuuta.common.Constants;
 import moe.yuuta.mipushtester.BuildConfig;
+import moe.yuuta.mipushtester.push.PushRequest;
+import moe.yuuta.mipushtester.topic.Topic;
 import moe.yuuta.mipushtester.update.Update;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -50,5 +53,9 @@ public class APIManager {
 
     public Call<Update> getUpdate () {
         return apiInterface.getUpdate();
+    }
+
+    public Call<List<Topic>> getAvailableTopics () {
+        return apiInterface.getAvailableTopics();
     }
 }

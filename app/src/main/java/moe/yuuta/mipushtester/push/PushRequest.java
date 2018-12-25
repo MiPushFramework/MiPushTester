@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-class PushRequest {
+public class PushRequest {
     @SerializedName("registration_id")
     private String registrationId;
     @SerializedName("delay_ms")

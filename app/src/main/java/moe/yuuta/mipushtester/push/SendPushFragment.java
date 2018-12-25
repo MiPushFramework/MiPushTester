@@ -33,6 +33,7 @@ import moe.shizuku.preference.SwitchPreference;
 import moe.yuuta.common.Constants;
 import moe.yuuta.mipushtester.BuildConfig;
 import moe.yuuta.mipushtester.R;
+import moe.yuuta.mipushtester.api.APIManager;
 import moe.yuuta.mipushtester.status.RegistrationStatus;
 import retrofit2.Response;
 
