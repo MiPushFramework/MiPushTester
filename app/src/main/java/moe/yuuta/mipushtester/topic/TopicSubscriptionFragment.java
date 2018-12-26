@@ -5,13 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 import com.google.android.material.snackbar.Snackbar;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,7 +80,7 @@ public class TopicSubscriptionFragment extends Fragment {
 
     private void displayTopicsToUI (List<Topic> originalList) {
         List<String> localSubscribedTopics = MiPushClient.getAllTopic(requireContext());
-        List<Topic> list = originalList.stream()
+        List<Topic> list = Stream.of(originalList)
                 .peek(topic -> topic.setSubscribed(localSubscribedTopics.contains(topic.getId())))
                 .collect(Collectors.toList());
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
