@@ -7,14 +7,23 @@
     <string name="push_card_title">Send to yourself</string>
     <string name="push_card_summary">Send a message to this device and test push availability</string>
     <string name="create_push">Create a push</string>
-    <string name="get_reg_id">My registration ID</string>
-    <string name="get_reg_id_dialog"><![CDATA[
-<h1>Your registration ID:</h1>
+    <string name="get_reg_info">My registration info</string>
+    <string name="copy_id">Copy ID</string>
+    <string name="get_reg_info_dialog"><![CDATA[
+    <h1>Registration info</h1>
+    <summary>These data is read from MiPush SDK, they will be automatically updated.</summary>
+    <br />
+<h3>Registration ID:</h3>
 <tt>%1$s</tt>
 <br /><br />
-<summary><font color="%2$s">Everyone who knows your registration ID can send notification to this device. It will be automatically updated.</font></summary>
+<summary><font color="%2$s">Everyone who knows your registration ID can send notification to this device.</font></summary>
+<br />
+<h3>Registration region ID:</h3>
+<tt>%3$s</tt>
+<br /><br />
+<summary><font color="%2$s">The ID which represents your region when you register push. It may not associated with your IP.</font></summary>
     ]]></string>
-    <string name="get_reg_id_unavailable">Unavailable (Only available after you register)</string>
+    <string name="get_reg_info_unavailable">Unavailable (Only available after you register)</string>
     <string name="close">Close</string>
     <string name="reset_title">Reset</string>
     <string name="reset_summary">Delete all push settings, include your registration ID</string>

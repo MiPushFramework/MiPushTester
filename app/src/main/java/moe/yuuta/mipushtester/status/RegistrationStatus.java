@@ -14,6 +14,7 @@ public class RegistrationStatus {
     public final ObservableBoolean registered = new ObservableBoolean(false);
     public final ObservableBoolean useMIUIPush = new ObservableBoolean(false);
     public final ObservableField<String> regId = new ObservableField<>();
+    public final ObservableField<String> regRegion = new ObservableField<>();
 
     public static RegistrationStatus get (@NonNull Context context) {
         context = context.getApplicationContext();
@@ -32,6 +33,7 @@ public class RegistrationStatus {
         useMIUIPush.set(MiPushClient.shouldUseMIUIPush(context));
         // It will register push
         regId.set(MiPushClient.getRegId(context));
+        regRegion.set(MiPushClient.getAppRegion(context));
         // SDK will detect it's registered or not. Only registered client will return a non-null value.
         // The detection code is optimized, the best way is to use public APIs.
         // BTW, after we unregister it, it will still return a non-null value.....

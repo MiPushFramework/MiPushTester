@@ -169,20 +169,22 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
         }, 100);
     }
 
-    private void handleGetID () {
+    private void handleGetInfo() {
         TypedArray typedArray = requireContext().obtainStyledAttributes(new int[]{ android.R.attr.textColorSecondary });
         int summaryColor = typedArray.getColor(0, Color.BLACK);
         typedArray.recycle();
         String id = mRegistrationStatus.regId.get();
+        String region = mRegistrationStatus.regRegion.get();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext())
-                .setMessage(Html.fromHtml(getString(R.string.get_reg_id_dialog,
-                        id == null ? getString(R.string.get_reg_id_unavailable) : id,
-                        Integer.toHexString(summaryColor))))
+                .setMessage(Html.fromHtml(getString(R.string.get_reg_info_dialog,
+                        id == null ? getString(R.string.get_reg_info_unavailable) : id,
+                        Integer.toHexString(summaryColor),
+                        region == null ? getString(R.string.get_reg_info_unavailable) : region)))
                 .setPositiveButton(R.string.close, (dialog, which) -> dialog.dismiss());
         if (id != null) {
             ClipboardManager clipboardManager = ContextCompat.getSystemService(requireContext(), ClipboardManager.class);
             if (clipboardManager != null) {
-                builder.setNegativeButton(android.R.string.copy, (dialog, which) -> clipboardManager.setPrimaryClip(ClipData.newPlainText(null, id)));
+                builder.setNegativeButton(R.string.copy_id, (dialog, which) -> clipboardManager.setPrimaryClip(ClipData.newPlainText(null, id)));
             }
         }
         builder.show();
@@ -191,8 +193,8 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_get_id:
-                handleGetID();
+            case R.id.action_get_info:
+                handleGetInfo();
                 return true;
             case R.id.action_share_logs:
                 startActivity(Intent.createChooser(LogUtils.getShareIntent(requireContext()), getString(R.string.share_logs_chooser_title)));

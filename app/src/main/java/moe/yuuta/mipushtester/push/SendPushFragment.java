@@ -16,7 +16,6 @@ import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
-import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -94,7 +93,7 @@ public class SendPushFragment extends PreferenceFragment implements Callback {
         // which proofs xmsf records user's region. (The mipush.xml in xmsf not contains region info).
         // NOTE 2: User may need to reset the tester and re-enable system-side push service to update this record.
         findPreference("global").setSummary(Html.fromHtml(getString(R.string.send_push_global_summary,
-                "China".equals(MiPushClient.getAppRegion(requireContext())) ?
+                "China".equals(RegistrationStatus.get(requireContext()).regRegion.get()) ?
                         getString(R.string.send_push_global_summary_may_not_be_able_to_receive_after_enabling) :
                         getString(R.string.send_push_global_summary_may_not_be_able_to_receive_after_disabling))));
     }
