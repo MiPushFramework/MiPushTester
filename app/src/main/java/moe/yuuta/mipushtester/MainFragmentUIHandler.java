@@ -7,4 +7,6 @@ public interface MainFragmentUIHandler {
     void handleCreatePush (View v);
     void handleReset (View v);
     void handleSubscribeTopic (View v);
+    void handleSetAcceptTimeStart (View v);
+    void handleSetAcceptTimeEnd (View v);
 }

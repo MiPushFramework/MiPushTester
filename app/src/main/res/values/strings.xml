@@ -124,4 +124,14 @@
     <string name="retry">Retry</string>
     <string name="topic_empty_title">Currently empty</string>
     <string name="topic_empty_description">We\'ll add more topics here, check it back later.</string>
+    <!-- Accept Time -->
+    <string name="accept_time_card_title">Accept Time</string>
+    <string name="accept_time_card_description">Set the time period which allows to receive push. Messages arrived outside the period will arrive next period</string>
+    <string name="accept_time_card_current"><![CDATA[
+Current: <b>%02d:%02d-%02d:%02d</b> %5$s
+    ]]></string>
+    <string name="accept_time_card_current_always">(Always)</string>
+    <string name="accept_time_card_current_never">(Never)</string>
+    <string name="modify_start_time">Modify start time</string>
+    <string name="modify_end_time">Modify end time</string>
 </resources>
