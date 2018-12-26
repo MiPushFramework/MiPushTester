@@ -49,7 +49,7 @@
         <item>3</item>
     </string-array>
     <string name="send_push_pass_through">Pass through message</string>
-    <string name="send_push_pass_through_summary">Message sent directly to this app without displaying any notifications</string>
+    <string name="send_push_pass_through_summary">Message sent directly to this app without displaying any notifications (We\'ll display a toast and show message details when received)</string>
     <string name="send_push_click_action">Click action</string>
     <string name="send_push_click_action_type">Type</string>
     <string name="send_push_click_action_type_summary">The action type when you click on the notification</string>
