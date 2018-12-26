@@ -9,18 +9,21 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
-import com.google.android.material.snackbar.Snackbar;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import moe.yuuta.mipushtester.R;
 import moe.yuuta.mipushtester.api.APIManager;
+import moe.yuuta.mipushtester.databinding.FragmentTopicSubscriptionBinding;
+import moe.yuuta.mipushtester.widgets.multi_state.State;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,6 +33,7 @@ public class TopicSubscriptionFragment extends Fragment {
 
     private TopicListAdapter mAdapter;
     private Call<List<Topic>> mGetTopicListCall;
+    private State mLoadingState;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,20 +52,34 @@ public class TopicSubscriptionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_topic_subscription, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_topic);
+        final FragmentTopicSubscriptionBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.fragment_topic_subscription, container, false);
+        RecyclerView recyclerView = binding.recyclerTopic;
         recyclerView.setAdapter(mAdapter);
-        return view;
+        mLoadingState = new State();
+        mLoadingState.onRetryListener = (v -> call());
+        binding.setState(mLoadingState);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        call();
+    }
+
+    private void call () {
+        if (mGetTopicListCall != null) {
+            mGetTopicListCall.cancel();
+            mGetTopicListCall = null;
+        }
         mGetTopicListCall = APIManager.getInstance().getAvailableTopics();
+        mLoadingState.showProgress();
         mGetTopicListCall.enqueue(new Callback<List<Topic>>() {
             @Override
             public void onResponse(@NonNull Call<List<Topic>> call, @NonNull Response<List<Topic>> response) {
                 if (call.isCanceled()) return;
+                mLoadingState.hideProgress();
                 if (!response.isSuccessful()) {
                     onFailure(call, new Exception("Unsuccessful code " + response.code()));
                     return;
@@ -73,12 +91,23 @@ public class TopicSubscriptionFragment extends Fragment {
             public void onFailure(@NonNull Call<List<Topic>> call, @NonNull Throwable t) {
                 logger.e("Cannot retain topics", t);
                 if (call.isCanceled()) return;
-                Snackbar.make(getView(), R.string.error_load_topics, Snackbar.LENGTH_INDEFINITE).show();
+                mLoadingState.hideProgress();
+                mLoadingState.icon.set(ContextCompat.getDrawable(requireContext(), R.mipmap.illustration_fetal_error));
+                mLoadingState.text.set(getString(R.string.error_load_topics));
+                mLoadingState.description.set(getString(R.string.error_description_global));
             }
         });
     }
 
     private void displayTopicsToUI (List<Topic> originalList) {
+        if (originalList == null || originalList.size() <= 0) {
+            mLoadingState.icon.set(ContextCompat.getDrawable(requireContext(), R.mipmap.illustration_list_is_empty));
+            mLoadingState.text.set(getString(R.string.topic_empty_title));
+            mLoadingState.showRetry.set(false);
+            mLoadingState.description.set(getString(R.string.topic_empty_description));
+            return;
+        }
+        mLoadingState.hideAll();
         List<String> localSubscribedTopics = MiPushClient.getAllTopic(requireContext());
         List<Topic> list = Stream.of(originalList)
                 .peek(topic -> topic.setSubscribed(localSubscribedTopics.contains(topic.getId())))

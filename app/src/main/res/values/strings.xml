@@ -105,4 +105,8 @@
     <string name="topic_action_title">Subscribe topics</string>
     <string name="topic_action_description">Subscribe some topics provided by the author, I\'ll send some messages to these topics</string>
     <string name="error_load_topics">Cannot retain topics</string>
+    <string name="error_description_global">Check your internet access and try again later.</string>
+    <string name="retry">Retry</string>
+    <string name="topic_empty_title">Currently empty</string>
+    <string name="topic_empty_description">We\'ll add more topics here, check it back later.</string>
 </resources>
