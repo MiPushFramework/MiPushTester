@@ -97,7 +97,6 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
     private Observable.OnPropertyChangedCallback mApplyAcceptTimeListener = new Observable.OnPropertyChangedCallback() {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
-            mAcceptTimePeriod.applyToSharedPreferences(requireContext());
             // Custom binding adapter not works this time >_<
             String alwaysStatus = "";
             int startHour = mAcceptTimePeriod.startHour.get();
@@ -293,6 +292,7 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
                 (view, hourOfDay, minute) -> {
                     mAcceptTimePeriod.startHour.set(hourOfDay);
                     mAcceptTimePeriod.startMinute.set(minute);
+                    mAcceptTimePeriod.applyToSharedPreferences(requireContext());
                 },
                 mAcceptTimePeriod.startHour.get(),
                 mAcceptTimePeriod.startMinute.get(),
@@ -306,6 +306,7 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
                 (view, hourOfDay, minute) -> {
                     mAcceptTimePeriod.endHour.set(hourOfDay);
                     mAcceptTimePeriod.endMinute.set(minute);
+                    mAcceptTimePeriod.applyToSharedPreferences(requireContext());
                 },
                 mAcceptTimePeriod.endHour.get(),
                 mAcceptTimePeriod.endMinute.get(),
