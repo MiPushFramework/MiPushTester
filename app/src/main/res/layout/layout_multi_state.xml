@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="state"
+            type="moe.yuuta.mipushtester.widgets.multi_state.State" />
+        <import type="android.view.View" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@android:id/icon"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
+            android:contentDescription="@{state.contentDescription}"
+            android:scaleType="centerCrop"
+            android:src="@{state.icon}"
+            android:visibility="@{state.showIcon ? View.VISIBLE : View.GONE}"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@mipmap/illustration_fetal_error" />
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_marginTop="16dp"
+            android:text="@{state.text}"
+            android:visibility="@{state.showTitle ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@android:id/icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/app_name"/>
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_marginTop="8dp"
+            android:visibility="@{state.showDescription ? View.VISIBLE : View.GONE}"
+            android:text="@{state.description}"
+            app:layout_constraintTop_toBottomOf="@android:id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/app_name"/>
+        <Button
+            android:id="@android:id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/retry"
+            android:visibility="@{state.showRetry ? View.VISIBLE : View.GONE}"
+            android:onClick="@{state.onRetryListener}"
+            app:layout_constraintTop_toBottomOf="@android:id/summary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+        <ProgressBar
+            android:id="@android:id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{state.showProgress ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

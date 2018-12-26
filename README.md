@@ -31,4 +31,16 @@ If your push (message) is not received or display an error, you can feedback [he
 Don't forget to attach your logs by sharing logs zip (Main → Menu → Share logs) and your steps.
 
 # Licenses
+## The license for this project
 GPL v3.0
+## Licenses for third-party resources
+Licenses of libraries are used in Android client is attached into the app, you can go to Main Menu Open Source Licenses to view them.
+
+Some icons and pictures comes from [icons8.com](https://icons8.com/license), which are free to use for Open Source (Established projects should get the icons for free.)
+
+Licenses of libraries are used in the server:
+
+* Vertx - Eclipse Public License 2.0 and Apache License 2.0
+* JUnit - EPL 1.0
+* Mockito - MIT
+* Power Mockito - Apache 2.0
