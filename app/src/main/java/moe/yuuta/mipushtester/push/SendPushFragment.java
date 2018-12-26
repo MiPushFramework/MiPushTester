@@ -16,6 +16,7 @@ import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -82,6 +83,20 @@ public class SendPushFragment extends PreferenceFragment implements Callback {
                 getString(R.string.send_push_limit_cannot_template, Build.MODEL),
         });
         limitModel.setEntryValues(R.array.send_push_limit_ev_default);
+
+        // According to the feedback, the SDK will detect region when registration.
+        // If its result is China, it will not be able to receive messages which are sent via
+        // global API. If not, it will not be able to receive messages which are sent via China API as well.
+        // But probably it isn't associated with user's IP. Users in Republic of Singapore (Result: Singapore) will
+        // return Singapore, but users in Canada will return China. Maybe because there are official MiPush servers in Republic of Singapore?
+        //
+        // NOTE 1: The result is associated with "configurations" in Push service (xmsf) as well. But I still not found any evidence
+        // which proofs xmsf records user's region. (The mipush.xml in xmsf not contains region info).
+        // NOTE 2: User may need to reset the tester and re-enable system-side push service to update this record.
+        findPreference("global").setSummary(Html.fromHtml(getString(R.string.send_push_global_summary,
+                "China".equals(MiPushClient.getAppRegion(requireContext())) ?
+                        getString(R.string.send_push_global_summary_may_not_be_able_to_receive_after_enabling) :
+                        getString(R.string.send_push_global_summary_may_not_be_able_to_receive_after_disabling))));
     }
 
     private void updateUriLimitStatus(@Nullable Object newValue) {

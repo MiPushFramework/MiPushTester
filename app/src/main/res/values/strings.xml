@@ -84,7 +84,13 @@
         <item>2</item>
     </string-array>
     <string name="send_push_global">Use Global server</string>
-    <string name="send_push_global_summary">Switch to global MiPush server, it may improve message receiving if you are not in China</string>
+    <string name="send_push_global_summary">Switch to global MiPush server, it may improve message receiving if you are not in China%1$s</string>
+    <string name="send_push_global_summary_may_not_be_able_to_receive_after_enabling"><![CDATA[
+<br /><b>You may not be able to receive messages after enabling</b>
+    ]]></string>
+    <string name="send_push_global_summary_may_not_be_able_to_receive_after_disabling"><![CDATA[
+<br /><b>You may not be able to receive messages after disabling</b>
+    ]]></string>
     <string name="send_push_pass_through_notification">Pass through notification</string>
     <string name="send_push_pass_through_notification_summary">Still display a notification if it\'s a pass through message</string>
     <!-- Message detail -->
