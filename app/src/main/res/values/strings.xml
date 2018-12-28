@@ -109,7 +109,7 @@
     <string name="share_logs">Share Logs</string>
     <string name="share_logs_chooser_title">Send logs to…</string>
     <string name="view_on_github">View on GitHub</string>
-    <string name="error_send_push_need_register">Sending push requires registration at first</string>
+    <string name="error_need_register">This feature requires registration at first</string>
     <string name="update_available">Update available: %1$s</string>
     <string name="view">View</string>
     <!-- Push Receiver -->

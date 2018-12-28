@@ -24,12 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.elvishew.xlog.Logger;
-import com.elvishew.xlog.XLog;
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
-import com.google.android.material.snackbar.Snackbar;
-import com.xiaomi.mipush.sdk.MiPushClient;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -38,6 +32,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import com.elvishew.xlog.Logger;
+import com.elvishew.xlog.XLog;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+import com.google.android.material.snackbar.Snackbar;
+import com.xiaomi.mipush.sdk.MiPushClient;
+
 import moe.yuuta.mipushtester.accept_time.AcceptTimePeriod;
 import moe.yuuta.mipushtester.api.APIManager;
 import moe.yuuta.mipushtester.databinding.FragmentMainBinding;
@@ -193,7 +194,7 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
 
     public void handleCreatePush (View v) {
         if (!mRegistrationStatus.registered.get()) {
-            Toast.makeText(requireContext(), R.string.error_send_push_need_register, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show();
             return;
         }
         Navigation.findNavController(requireActivity(), R.id.nav_host)
@@ -207,13 +208,13 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
         requireContext().getSharedPreferences("mipush_extra", MODE_PRIVATE).edit().clear().commit();
         requireContext().getSharedPreferences("mipush_oc", MODE_PRIVATE).edit().clear().commit();
         Toast.makeText(requireContext(), R.string.reset_toast, Toast.LENGTH_LONG).show();
-        // 安排上重启
+
         Intent mStartActivity = new Intent(requireContext(), MainActivity.class);
         int mPendingIntentId = 2333;
         PendingIntent mPendingIntent = PendingIntent.getActivity(requireContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager mgr = (AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        // 重启前挂掉
+
         new Handler(getMainLooper()).postDelayed(() -> {
             Navigation.findNavController(requireActivity(), R.id.nav_host).navigateUp();
             System.exit(0);
@@ -282,12 +283,20 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
 
     @Override
     public void handleSubscribeTopic(View v) {
+        if (!mRegistrationStatus.registered.get()) {
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Navigation.findNavController(requireActivity(), R.id.nav_host)
                 .navigate(R.id.action_mainFragment_to_topicSubscriptionFragment);
     }
 
     @Override
     public void handleSetAcceptTimeStart(View v) {
+        if (!mRegistrationStatus.registered.get()) {
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show();
+            return;
+        }
         TimePickerDialog dialog = new TimePickerDialog(requireContext(),
                 (view, hourOfDay, minute) -> {
                     mAcceptTimePeriod.startHour.set(hourOfDay);
@@ -302,6 +311,10 @@ public class MainFragment extends Fragment implements MainFragmentUIHandler {
 
     @Override
     public void handleSetAcceptTimeEnd(View v) {
+        if (!mRegistrationStatus.registered.get()) {
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show();
+            return;
+        }
         TimePickerDialog dialog = new TimePickerDialog(requireContext(),
                 (view, hourOfDay, minute) -> {
                     mAcceptTimePeriod.endHour.set(hourOfDay);
