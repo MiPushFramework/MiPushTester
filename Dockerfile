@@ -7,7 +7,8 @@ WORKDIR /app/server
 RUN apk add git && \
     chmod +x ./gradlew && \
     rm -rf app/ && \
-    ./gradlew --no-daemon :server:jar && \
+    ./gradlew :common:build && \
+    ./gradlew :server:jar && \
     mv server/build/libs/server-1.0.jar /server.jar
 
 FROM openjdk:8u171-jre-alpine3.8 as environment
