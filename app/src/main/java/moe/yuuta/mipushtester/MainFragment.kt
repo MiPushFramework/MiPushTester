@@ -135,13 +135,13 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
                 if (!response.isSuccessful) return
                 val result: Update? = response.body() as Update
                 if (result == null) return
-                if (result.versionCode < BuildConfig.VERSION_CODE) return
+                if (result.versionCode <= BuildConfig.VERSION_CODE) return
                 Snackbar.make(binding.root, getString(R.string.update_available,
                         result.versionName), Snackbar.LENGTH_SHORT)
                         .setAction(R.string.view, object : View.OnClickListener {
                             override fun onClick(v: View) {
                                 val url = if (shouldOpenGooglePlay())
-                                    "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID
+                                    "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
                                 else result.htmlLink
                                 try {
                                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
