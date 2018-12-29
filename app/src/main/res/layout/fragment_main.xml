@@ -7,6 +7,9 @@
         <variable
             name="status"
             type="moe.yuuta.mipushtester.status.RegistrationStatus" />
+        <variable
+            name="acceptTime"
+            type="moe.yuuta.mipushtester.accept_time.AcceptTimePeriod" />
     </data>
 
     <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,6 +31,10 @@
                 bind:uiHandler="@{uiHandler}" />
             <include layout="@layout/item_topic_subscription"
                 bind:uiHandler="@{uiHandler}" />
+            <include layout="@layout/item_accept_time"
+                android:id="@+id/layout_accept_time"
+                bind:uiHandler="@{uiHandler}"
+                bind:acceptTime="@{acceptTime}"/>
             <include layout="@layout/item_reset"
                 bind:uiHandler="@{uiHandler}" />
         </LinearLayout>
