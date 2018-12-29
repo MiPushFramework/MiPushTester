@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 if (file("play-store-api.json").exists()) {
@@ -112,4 +114,7 @@ dependencies {
     implementation 'com.elvishew:xlog:1.6.1'
     // Common
     implementation project(':common')
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
