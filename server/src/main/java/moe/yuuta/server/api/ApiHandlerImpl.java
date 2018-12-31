@@ -159,8 +159,9 @@ public class ApiHandlerImpl implements ApiHandler {
             extras.put(Constants.EXTRA_CLIENT_VERSION, routingContext.request().getHeader(Constants.HEADER_VERSION));
             extras.put(Constants.EXTRA_REQUEST_LOCALE, routingContext.request().getHeader(Constants.HEADER_LOCALE));
             extras.put(Constants.EXTRA_REQUEST_TIME, Long.toString(System.currentTimeMillis()));
-            getMiPushApi().pushOnceToId(message,
-                    new String[]{ request.getRegistrationId() },
+            getMiPushApi().pushOnce(message,
+                    request.getRegistrationId(),
+                    request.getRegIdType(),
                     extras,
                     request.isGlobal(),
                     ar -> {

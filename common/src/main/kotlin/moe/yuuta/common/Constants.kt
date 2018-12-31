@@ -16,4 +16,7 @@ object Constants {
     const val EXTRA_CLIENT_VERSION = EXTRA_MIPUSHTESTER_PREFIX + "client_version"
     const val TESTER_CLIENT_ID = "moe.yuuta.mipushtester"
     const val FRAMEWORK_CLIENT_ID = "top.trumeet.mipush"
+    const val REG_ID_TYPE_REG_ID = 0
+    const val REG_ID_TYPE_ALIAS = 1
+    const val REG_ID_TYPE_ACCOUNT = 2
 }

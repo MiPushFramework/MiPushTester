@@ -80,6 +80,36 @@ public class Message {
     private String intentUri;
     @FormData("extra.web_uri")
     private String webUri;
+    @FormData("registration_id")
+    private String regId;
+    @FormData("alias")
+    private String alias;
+    @FormData("user_account")
+    private String account;
+
+    public String getRegId() {
+        return regId;
+    }
+
+    public void setRegId(String regId) {
+        this.regId = regId;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
     public String getIntentUri() {
         return intentUri;

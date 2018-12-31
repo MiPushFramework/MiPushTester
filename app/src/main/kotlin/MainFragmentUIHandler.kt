@@ -9,4 +9,6 @@ interface MainFragmentUIHandler {
     fun handleSubscribeTopic (v: View)
     fun handleSetAcceptTimeStart (v: View)
     fun handleSetAcceptTimeEnd (v: View)
+    fun handleSetAlias (v: View)
+    fun handleSetAccount (v: View)
 }

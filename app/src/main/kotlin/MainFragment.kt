@@ -29,6 +29,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import com.xiaomi.mipush.sdk.MiPushClient
 import moe.yuuta.mipushtester.accept_time.AcceptTimePeriod
+import moe.yuuta.mipushtester.accountAlias.AccountAliasStore
 import moe.yuuta.mipushtester.api.APIManager
 import moe.yuuta.mipushtester.databinding.FragmentMainBinding
 import moe.yuuta.mipushtester.log.LogUtils
@@ -59,7 +60,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
     @Override
     override fun onCreateView(@NonNull inflater: LayoutInflater, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false) as FragmentMainBinding
-        mRegistrationStatus.registered.addOnPropertyChangedCallback(mRestoreSubscriptionListener)
+        mRegistrationStatus.registered.addOnPropertyChangedCallback(mRestoreConfigurationListener)
         mAcceptTimePeriod.startHour.addOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.startMinute.addOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.endHour.addOnPropertyChangedCallback(mApplyAcceptTimeListener)
@@ -71,12 +72,17 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         return binding.root
     }
 
-    private val mRestoreSubscriptionListener: Observable.OnPropertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
+    private val mRestoreConfigurationListener: Observable.OnPropertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
         @Override
         override fun onPropertyChanged(sender: Observable, propertyId: Int) {
             if (mRegistrationStatus.registered.get()) {
                 for (id in TopicStore.get(requireContext()).getSubscribedIds())
                     MiPushClient.subscribe(requireContext(), id, null)
+                for (alias in AccountAliasStore.get(requireContext()).getAlias())
+                    MiPushClient.setAlias(requireContext(), alias, null)
+                for (account in AccountAliasStore.get(requireContext()).getAccount())
+                    MiPushClient.setUserAccount(requireContext(), account, null)
+                // TODO: Unset values if it is not contain in stores
             }
         }
     }
@@ -283,7 +289,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
     @Override
     override fun onDestroyView() {
         mGetUpdateCall.cancel()
-        mRegistrationStatus.registered.removeOnPropertyChangedCallback(mRestoreSubscriptionListener)
+        mRegistrationStatus.registered.removeOnPropertyChangedCallback(mRestoreConfigurationListener)
         mAcceptTimePeriod.startHour.removeOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.startMinute.removeOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.endHour.removeOnPropertyChangedCallback(mApplyAcceptTimeListener)
@@ -339,5 +345,23 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
                 mAcceptTimePeriod.endMinute.get(),
                 true)
         dialog.show()
+    }
+
+    override fun handleSetAlias(v: View) {
+        if (!(mRegistrationStatus.registered.get())) {
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show()
+            return
+        }
+        Navigation.findNavController(requireActivity(), R.id.nav_host)
+                .navigate(R.id.action_mainFragment_to_setAliasFragment)
+    }
+
+    override fun handleSetAccount(v: View) {
+        if (!(mRegistrationStatus.registered.get())) {
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show()
+            return
+        }
+        Navigation.findNavController(requireActivity(), R.id.nav_host)
+                .navigate(R.id.action_mainFragment_to_setAccountFragment)
     }
 }

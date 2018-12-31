@@ -3,7 +3,7 @@
     <data>
         <variable
             name="state"
-            type="moe.yuuta.mipushtester.widgets.multi_state.State" />
+            type="moe.yuuta.mipushtester.multi_state.State" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

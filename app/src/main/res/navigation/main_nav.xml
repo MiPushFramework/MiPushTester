@@ -16,6 +16,12 @@
         <action
             android:id="@+id/action_mainFragment_to_topicSubscriptionFragment"
             app:destination="@id/topicSubscriptionFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_setAliasFragment"
+            app:destination="@id/setAliasFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_setAccountFragment"
+            app:destination="@id/setAccountFragment" />
     </fragment>
     <fragment
         android:id="@+id/sendPushFragment"
@@ -26,4 +32,14 @@
         android:name="moe.yuuta.mipushtester.topic.TopicSubscriptionFragment"
         android:label="@string/title_topics"
         tools:layout="@layout/fragment_topic_subscription" />
+    <fragment
+        android:id="@+id/setAliasFragment"
+        android:name="moe.yuuta.mipushtester.accountAlias.SetAliasFragment"
+        android:label="@string/alias"
+        tools:layout="@layout/fragment_set_list" />
+    <fragment
+        android:id="@+id/setAccountFragment"
+        android:name="moe.yuuta.mipushtester.accountAlias.SetAccountFragment"
+        android:label="@string/account"
+        tools:layout="@layout/fragment_set_list" />
 </navigation>
