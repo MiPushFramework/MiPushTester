@@ -18,7 +18,7 @@ import com.xiaomi.mipush.sdk.MiPushClient
 import moe.yuuta.mipushtester.R
 import moe.yuuta.mipushtester.api.APIManager
 import moe.yuuta.mipushtester.databinding.FragmentTopicSubscriptionBinding
-import moe.yuuta.mipushtester.widgets.multi_state.State
+import moe.yuuta.mipushtester.multi_state.State
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

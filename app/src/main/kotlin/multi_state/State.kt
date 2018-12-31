@@ -1,4 +1,4 @@
-package moe.yuuta.mipushtester.widgets.multi_state
+package moe.yuuta.mipushtester.multi_state
 
 import android.graphics.drawable.Drawable
 import android.view.View
