@@ -14,11 +14,11 @@ import com.annimon.stream.Collectors
 import com.annimon.stream.Stream
 import com.annimon.stream.function.Consumer
 import com.elvishew.xlog.XLog
-import com.xiaomi.mipush.sdk.MiPushClient
 import moe.yuuta.mipushtester.R
 import moe.yuuta.mipushtester.api.APIManager
 import moe.yuuta.mipushtester.databinding.FragmentTopicSubscriptionBinding
 import moe.yuuta.mipushtester.multi_state.State
+import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,10 +37,10 @@ class TopicSubscriptionFragment : Fragment() {
             override fun trigger(topic: Topic?, selected: Boolean) {
                 if (topic == null) return
                 if (selected) {
-                    MiPushClient.subscribe(requireContext(), topic.id, null)
+                    PushSdkWrapper.subscribe(requireContext(), topic.id)
                     TopicStore.get(requireContext()).subscribe(topic.id)
                 } else {
-                    MiPushClient.unsubscribe(requireContext(), topic.id, null)
+                    PushSdkWrapper.unsubscribe(requireContext(), topic.id)
                     TopicStore.get(requireContext()).unsubscribe(topic.id)
                 }
             }
@@ -109,7 +109,7 @@ class TopicSubscriptionFragment : Fragment() {
             return
         }
         mLoadingState.hideAll()
-        val localSubscribedTopics = MiPushClient.getAllTopic(requireContext())
+        val localSubscribedTopics = PushSdkWrapper.getAllTopic(requireContext())
         val list = Stream.of(originalList)
                 .peek(object : Consumer<Topic> {
                     override fun accept(topic: Topic?) {

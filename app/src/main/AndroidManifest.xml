@@ -23,21 +23,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:process=":push"
+            android:enabled="true"
+            android:exported="false"
+            android:authorities="${applicationId}.push.internal.PushSdkWraper.CoreProvider"
+            android:name=".push.internal.CoreProvider" />
         <service
+            android:process=":push"
             android:enabled="true"
             android:name="com.xiaomi.push.service.XMPushService"/>
         <service
+            android:process=":push"
             android:name="com.xiaomi.push.service.XMJobService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
+            android:process=":push"
             android:enabled="true"
             android:exported="true"
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler" />
-        <service android:enabled="true"
+        <service
+            android:process=":push"
+            android:enabled="true"
             android:name="com.xiaomi.mipush.sdk.MessageHandleService" />
         <receiver
+            android:process=":push"
             android:exported="true"
             android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver" >
             <intent-filter>
@@ -46,6 +58,7 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:process=":push"
             android:exported="false"
             android:name="com.xiaomi.push.service.receivers.PingReceiver" >
             <intent-filter>
@@ -53,6 +66,7 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:process=":push"
             android:exported="true"
             android:name="moe.yuuta.mipushtester.push.PushReceiver">
             <intent-filter>

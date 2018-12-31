@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.NonNull
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
-import com.xiaomi.mipush.sdk.MiPushClient
+import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 
 data class RegistrationStatus(
         val registered: ObservableBoolean = ObservableBoolean(false),
@@ -29,10 +29,10 @@ data class RegistrationStatus(
     }
 
     fun fetchStatus (@NonNull context: Context) {
-        useMIUIPush.set(MiPushClient.shouldUseMIUIPush(context))
+        useMIUIPush.set(PushSdkWrapper.shouldUseMIUIPush(context))
         // It will register push
-        regId.set(MiPushClient.getRegId(context))
-        regRegion.set(MiPushClient.getAppRegion(context))
+        regId.set(PushSdkWrapper.getRegId(context))
+        regRegion.set(PushSdkWrapper.getAppRegion(context))
         // SDK will detect it's registered or not. Only registered client will return a non-null value.
         // The detection code is optimized, the best way is to use public APIs.
         // BTW, after we unregister it, it will still return a non-null value.....

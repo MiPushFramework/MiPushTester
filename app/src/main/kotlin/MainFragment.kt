@@ -27,12 +27,12 @@ import androidx.navigation.Navigation
 import com.elvishew.xlog.XLog
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
-import com.xiaomi.mipush.sdk.MiPushClient
 import moe.yuuta.mipushtester.accept_time.AcceptTimePeriod
 import moe.yuuta.mipushtester.accountAlias.AccountAliasStore
 import moe.yuuta.mipushtester.api.APIManager
 import moe.yuuta.mipushtester.databinding.FragmentMainBinding
 import moe.yuuta.mipushtester.log.LogUtils
+import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 import moe.yuuta.mipushtester.status.RegistrationStatus
 import moe.yuuta.mipushtester.topic.TopicStore
 import moe.yuuta.mipushtester.update.Update
@@ -77,11 +77,11 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         override fun onPropertyChanged(sender: Observable, propertyId: Int) {
             if (mRegistrationStatus.registered.get()) {
                 for (id in TopicStore.get(requireContext()).getSubscribedIds())
-                    MiPushClient.subscribe(requireContext(), id, null)
+                    PushSdkWrapper.subscribe(requireContext(), id)
                 for (alias in AccountAliasStore.get(requireContext()).getAlias())
-                    MiPushClient.setAlias(requireContext(), alias, null)
+                    PushSdkWrapper.setAlias(requireContext(), alias)
                 for (account in AccountAliasStore.get(requireContext()).getAccount())
-                    MiPushClient.setUserAccount(requireContext(), account, null)
+                    PushSdkWrapper.setUserAccount(requireContext(), account)
                 // TODO: Unset values if it is not contain in stores
             }
         }
@@ -115,12 +115,11 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
                     endMinute,
                     alwaysStatus))
             if (mRegistrationStatus.registered.get()) {
-                MiPushClient.setAcceptTime(requireContext(),
+                PushSdkWrapper.setAcceptTime(requireContext(),
                         startHour,
                         startMinute,
                         endHour,
-                        endMinute,
-                        null)
+                        endMinute)
             }
 
         }
@@ -171,10 +170,10 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         mRegistrationStatus.fetchStatus(requireContext())
         if (mRegistrationStatus.registered.get() != true) {
             XLog.i("Registering")
-            MiPushClient.registerPush(requireContext(), BuildConfig.XM_APP_ID, BuildConfig.XM_APP_KEY)
+            PushSdkWrapper.registerPush(requireContext(), BuildConfig.XM_APP_ID, BuildConfig.XM_APP_KEY)
         } else {
             XLog.i("Unregistering")
-            MiPushClient.unregisterPush(requireContext())
+            PushSdkWrapper.unregisterPush(requireContext())
             requireContext().getSharedPreferences("mipush", Context.MODE_PRIVATE)
                     .edit()
                     // It will check if all settings are valid. If it's invalid, it won't register.
@@ -195,7 +194,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
 
     @SuppressLint("ApplySharedPref")
     override fun handleReset (v: View) {
-        MiPushClient.unregisterPush(requireContext())
+        PushSdkWrapper.unregisterPush(requireContext())
         requireContext().getSharedPreferences("mipush", MODE_PRIVATE).edit().clear().commit()
         requireContext().getSharedPreferences("mipush_extra", MODE_PRIVATE).edit().clear().commit()
         requireContext().getSharedPreferences("mipush_oc", MODE_PRIVATE).edit().clear().commit()

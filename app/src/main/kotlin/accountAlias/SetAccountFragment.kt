@@ -1,8 +1,8 @@
 package moe.yuuta.mipushtester.accountAlias
 
 import androidx.core.content.ContextCompat
-import com.xiaomi.mipush.sdk.MiPushClient
 import moe.yuuta.mipushtester.R
+import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 
 class SetAccountFragment : SetListAbsFragment() {
     override fun loadData(): Set<String> {
@@ -24,7 +24,7 @@ class SetAccountFragment : SetListAbsFragment() {
     override fun handleAdd(value: String) {
         AccountAliasStore.get(requireContext())
                 .addAccount(value)
-        MiPushClient.setUserAccount(requireContext(), value, null)
+        PushSdkWrapper.setUserAccount(requireContext(), value)
         // Refresh null state
         loadData()
     }
@@ -32,7 +32,7 @@ class SetAccountFragment : SetListAbsFragment() {
     override fun handleRemove(value: String) {
         AccountAliasStore.get(requireContext())
                 .removeAccount(value)
-        MiPushClient.unsetUserAccount(requireContext(), value, null)
+        PushSdkWrapper.unsetUserAccount(requireContext(), value)
         // Refresh null state
         loadData()
     }

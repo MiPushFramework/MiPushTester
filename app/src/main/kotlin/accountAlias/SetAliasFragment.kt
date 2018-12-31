@@ -1,8 +1,8 @@
 package moe.yuuta.mipushtester.accountAlias
 
 import androidx.core.content.ContextCompat
-import com.xiaomi.mipush.sdk.MiPushClient
 import moe.yuuta.mipushtester.R
+import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 
 class SetAliasFragment : SetListAbsFragment() {
     override fun loadData(): Set<String> {
@@ -24,7 +24,7 @@ class SetAliasFragment : SetListAbsFragment() {
     override fun handleAdd(value: String) {
         AccountAliasStore.get(requireContext())
                 .addAlias(value)
-        MiPushClient.setAlias(requireContext(), value, null)
+        PushSdkWrapper.setAlias(requireContext(), value)
         // Refresh null state
         loadData()
     }
@@ -32,7 +32,7 @@ class SetAliasFragment : SetListAbsFragment() {
     override fun handleRemove(value: String) {
         AccountAliasStore.get(requireContext())
                 .removeAlias(value)
-        MiPushClient.unsetAlias(requireContext(), value, null)
+        PushSdkWrapper.unsetAlias(requireContext(), value)
         // Refresh null state
         loadData()
     }
