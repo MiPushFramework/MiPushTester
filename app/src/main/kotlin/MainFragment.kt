@@ -272,7 +272,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
             }
             R.id.action_view_on_github -> {
                 try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Trumeet/MiPushTester")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/MiPushFramework/MiPushTester")))
                 } catch (ignored: ActivityNotFoundException) {
                 }
                 true

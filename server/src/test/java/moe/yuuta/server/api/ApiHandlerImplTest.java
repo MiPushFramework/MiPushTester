@@ -213,7 +213,7 @@ public class ApiHandlerImplTest {
     public void shouldApplyUpdateRepoMapping (TestContext testContext) throws Exception {
         Async async = testContext.async(3);
         this.getLatestReleaseCallback = ((owner, repo, handler) -> {
-            testContext.assertEquals("Trumeet", owner);
+            testContext.assertEquals("MiPushFramework", owner);
             testContext.assertEquals("MiPushTester", repo);
             async.countDown();
         });
