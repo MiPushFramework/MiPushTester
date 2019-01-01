@@ -32,15 +32,12 @@ object PushSdkWrapper {
             CondomOptions()
                     .preventBroadcastToBackgroundPackages(false)
                     .preventServiceInBackgroundPackages(false)
+                    .setDryRun(false)
                     .setOutboundJudge(object : OutboundJudge{
                         override fun shouldAllow(type: OutboundType, intent: Intent?, target_package: String): Boolean {
-                            if (type == OutboundType.GET_PACKAGE_INFO) {
-                                return false
-                            }
                             // Always allow to get hte realist results
                             return true
                         }
-
                     })
                     .addKit(object : CondomKit{
                         override fun onRegister(registry: CondomKit.CondomKitRegistry) {
@@ -110,4 +107,8 @@ object PushSdkWrapper {
 
     fun getAppRegion(@NonNull context: Context): String? =
             MiPushClient.getAppRegion(wrapContext(context))
+
+    fun clearNotification(@NonNull context: Context) {
+        MiPushClient.clearNotification(wrapContext(context))
+    }
 }

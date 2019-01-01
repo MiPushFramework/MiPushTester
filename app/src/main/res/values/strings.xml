@@ -24,6 +24,8 @@
 <summary><font color="%2$s">The ID which represents your region when you register push. It may not associated with your IP.</font></summary>
     ]]></string>
     <string name="get_reg_info_unavailable">Unavailable (Only available after you register)</string>
+    <string name="clear_notifications">Clear all notifications</string>
+    <string name="done">Done</string>
     <string name="close">Close</string>
     <string name="reset_title">Reset</string>
     <string name="reset_summary">Delete all push settings, include your registration ID</string>

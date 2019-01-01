@@ -257,6 +257,11 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
                 handleGetInfo()
                 true
             }
+            R.id.action_clear_notifications -> {
+                PushSdkWrapper.clearNotification(requireContext())
+                Toast.makeText(requireContext(), R.string.done, Toast.LENGTH_SHORT).show()
+                true
+            }
             R.id.action_share_logs -> {
                 val logIntent = LogUtils.getShareIntent(requireContext())
                 if (logIntent == null) {
