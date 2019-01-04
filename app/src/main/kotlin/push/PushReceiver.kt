@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.elvishew.xlog.XLog
 import com.xiaomi.mipush.sdk.*
 import moe.yuuta.mipushtester.R
+import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 import moe.yuuta.mipushtester.status.RegistrationStatus
 
 class PushReceiver : PushMessageReceiver() {
@@ -26,7 +27,7 @@ class PushReceiver : PushMessageReceiver() {
     override fun onReceiveRegisterResult(context: Context, message: MiPushCommandMessage) {
         val command = message.command
         XLog.i("Handle register result: $command")
-        if (MiPushClient.COMMAND_REGISTER.equals(command)) {
+        if (PushSdkWrapper.COMMAND_REGISTER.equals(command)) {
             XLog.i("Register result = " + message.resultCode)
             RegistrationStatus.get(context).registered.set(message.resultCode == (ErrorCode.SUCCESS.toLong()))
         }

@@ -27,11 +27,12 @@ import androidx.navigation.Navigation
 import com.elvishew.xlog.XLog
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
-import com.xiaomi.mipush.sdk.MiPushClient
 import moe.yuuta.mipushtester.accept_time.AcceptTimePeriod
+import moe.yuuta.mipushtester.accountAlias.AccountAliasStore
 import moe.yuuta.mipushtester.api.APIManager
 import moe.yuuta.mipushtester.databinding.FragmentMainBinding
 import moe.yuuta.mipushtester.log.LogUtils
+import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 import moe.yuuta.mipushtester.status.RegistrationStatus
 import moe.yuuta.mipushtester.topic.TopicStore
 import moe.yuuta.mipushtester.update.Update
@@ -59,7 +60,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
     @Override
     override fun onCreateView(@NonNull inflater: LayoutInflater, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false) as FragmentMainBinding
-        mRegistrationStatus.registered.addOnPropertyChangedCallback(mRestoreSubscriptionListener)
+        mRegistrationStatus.registered.addOnPropertyChangedCallback(mRestoreConfigurationListener)
         mAcceptTimePeriod.startHour.addOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.startMinute.addOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.endHour.addOnPropertyChangedCallback(mApplyAcceptTimeListener)
@@ -71,12 +72,17 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         return binding.root
     }
 
-    private val mRestoreSubscriptionListener: Observable.OnPropertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
+    private val mRestoreConfigurationListener: Observable.OnPropertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
         @Override
         override fun onPropertyChanged(sender: Observable, propertyId: Int) {
             if (mRegistrationStatus.registered.get()) {
                 for (id in TopicStore.get(requireContext()).getSubscribedIds())
-                    MiPushClient.subscribe(requireContext(), id, null)
+                    PushSdkWrapper.subscribe(requireContext(), id)
+                for (alias in AccountAliasStore.get(requireContext()).getAlias())
+                    PushSdkWrapper.setAlias(requireContext(), alias)
+                for (account in AccountAliasStore.get(requireContext()).getAccount())
+                    PushSdkWrapper.setUserAccount(requireContext(), account)
+                // TODO: Unset values if it is not contain in stores
             }
         }
     }
@@ -109,12 +115,11 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
                     endMinute,
                     alwaysStatus))
             if (mRegistrationStatus.registered.get()) {
-                MiPushClient.setAcceptTime(requireContext(),
+                PushSdkWrapper.setAcceptTime(requireContext(),
                         startHour,
                         startMinute,
                         endHour,
-                        endMinute,
-                        null)
+                        endMinute)
             }
 
         }
@@ -165,10 +170,10 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         mRegistrationStatus.fetchStatus(requireContext())
         if (mRegistrationStatus.registered.get() != true) {
             XLog.i("Registering")
-            MiPushClient.registerPush(requireContext(), BuildConfig.XM_APP_ID, BuildConfig.XM_APP_KEY)
+            PushSdkWrapper.registerPush(requireContext(), BuildConfig.XM_APP_ID, BuildConfig.XM_APP_KEY)
         } else {
             XLog.i("Unregistering")
-            MiPushClient.unregisterPush(requireContext())
+            PushSdkWrapper.unregisterPush(requireContext())
             requireContext().getSharedPreferences("mipush", Context.MODE_PRIVATE)
                     .edit()
                     // It will check if all settings are valid. If it's invalid, it won't register.
@@ -189,7 +194,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
 
     @SuppressLint("ApplySharedPref")
     override fun handleReset (v: View) {
-        MiPushClient.unregisterPush(requireContext())
+        PushSdkWrapper.unregisterPush(requireContext())
         requireContext().getSharedPreferences("mipush", MODE_PRIVATE).edit().clear().commit()
         requireContext().getSharedPreferences("mipush_extra", MODE_PRIVATE).edit().clear().commit()
         requireContext().getSharedPreferences("mipush_oc", MODE_PRIVATE).edit().clear().commit()
@@ -252,6 +257,11 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
                 handleGetInfo()
                 true
             }
+            R.id.action_clear_notifications -> {
+                PushSdkWrapper.clearNotification(requireContext())
+                Toast.makeText(requireContext(), R.string.done, Toast.LENGTH_SHORT).show()
+                true
+            }
             R.id.action_share_logs -> {
                 val logIntent = LogUtils.getShareIntent(requireContext())
                 if (logIntent == null) {
@@ -267,7 +277,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
             }
             R.id.action_view_on_github -> {
                 try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Trumeet/MiPushTester")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/MiPushFramework/MiPushTester")))
                 } catch (ignored: ActivityNotFoundException) {
                 }
                 true
@@ -283,7 +293,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
     @Override
     override fun onDestroyView() {
         mGetUpdateCall.cancel()
-        mRegistrationStatus.registered.removeOnPropertyChangedCallback(mRestoreSubscriptionListener)
+        mRegistrationStatus.registered.removeOnPropertyChangedCallback(mRestoreConfigurationListener)
         mAcceptTimePeriod.startHour.removeOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.startMinute.removeOnPropertyChangedCallback(mApplyAcceptTimeListener)
         mAcceptTimePeriod.endHour.removeOnPropertyChangedCallback(mApplyAcceptTimeListener)
@@ -339,5 +349,23 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
                 mAcceptTimePeriod.endMinute.get(),
                 true)
         dialog.show()
+    }
+
+    override fun handleSetAlias(v: View) {
+        if (!(mRegistrationStatus.registered.get())) {
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show()
+            return
+        }
+        Navigation.findNavController(requireActivity(), R.id.nav_host)
+                .navigate(R.id.action_mainFragment_to_setAliasFragment)
+    }
+
+    override fun handleSetAccount(v: View) {
+        if (!(mRegistrationStatus.registered.get())) {
+            Toast.makeText(requireContext(), R.string.error_need_register, Toast.LENGTH_SHORT).show()
+            return
+        }
+        Navigation.findNavController(requireActivity(), R.id.nav_host)
+                .navigate(R.id.action_mainFragment_to_setAccountFragment)
     }
 }

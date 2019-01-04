@@ -40,7 +40,7 @@ public class PushRequestVerifyTest {
         apiHandler = Mockito.spy(ApiHandler.apiHandler(vertx));
         Mockito.when(apiHandler.getMiPushApi()).thenReturn(new MiPushApi(null) {
             @Override
-            public void pushOnceToId(Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
+            public void pushOnce(Message message, String regIds, int regIdType, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
                 if (!nextApiCallShouldOK)
                     testContext.fail("Unaccepted call");
                 else
@@ -99,7 +99,7 @@ public class PushRequestVerifyTest {
 
     @Test(timeout = 2000)
     public void shouldRefuseBadPushRequest (TestContext testContext) {
-        Async async = testContext.async(6);
+        Async async = testContext.async(7);
         // Missing request test
         send(testContext, async, false, true /* Keep the variable amount always 1 */, false);
 
@@ -123,6 +123,11 @@ public class PushRequestVerifyTest {
         // Null registration ID test
         restoreRequest();
         normalRequest.setRegistrationId(null);
+        send(testContext, async, true, true, false);
+
+        // Invalid registration ID type test
+        restoreRequest();
+        normalRequest.setRegIdType(233333);
         send(testContext, async, true, true, false);
 
         // Too many extras test

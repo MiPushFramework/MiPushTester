@@ -8,10 +8,12 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.RequestOptions;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.codec.BodyCodec;
+import moe.yuuta.common.Constants;
 import moe.yuuta.server.formprocessor.HttpForm;
 
 // TODO: Add tests
@@ -39,20 +41,29 @@ public class MiPushApi {
         return extras;
     }
 
-    public void pushOnceToId (Message message, String[] regIds, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
-        Buffer arguments = HttpForm.toBuffer(message);
-        StringBuilder regIdArgumentBuilder = new StringBuilder();
-        for (int i = 0; i < regIds.length; i ++) {
-            String regId = regIds[i];
-            regIdArgumentBuilder.append(regId);
-            if (i != regIds.length - 1)
-                regIdArgumentBuilder.append(",");
+    public void pushOnce(Message message, String regId, int regIdType, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
+        String apiUrl = "/v3/message/regid";
+        switch (regIdType) {
+            case Constants.REG_ID_TYPE_REG_ID:
+                message.setRegId(regId);
+                apiUrl = "/v3/message/regid";
+                break;
+            case Constants.REG_ID_TYPE_ACCOUNT:
+                message.setAccount(regId);
+                apiUrl = "/v2/message/user_account";
+                break;
+            case Constants.REG_ID_TYPE_ALIAS:
+                message.setAlias(regId);
+                apiUrl = "/v3/message/alias";
+                break;
         }
-        arguments.appendString("&registration_id=" + regIdArgumentBuilder.toString());
+        Buffer arguments = HttpForm.toBuffer(message);
         if (customExtras != null) {
             arguments.appendString("&" + buildExtras(customExtras));
         }
-        generateHttpCall(HttpMethod.POST, "/v3/message/regid", useGlobal)
+        LoggerFactory.getLogger(MiPushApi.class).error("Sending to " + apiUrl + ", regIdWithType=" + regId + "," + regIdType);
+        LoggerFactory.getLogger(MiPushApi.class).error(arguments.toString());
+        generateHttpCall(HttpMethod.POST, apiUrl, useGlobal)
                 .as(BodyCodec.json(SendMessageResponse.class))
                 .putHeader("Content-Type", "application/x-www-form-urlencoded")
                 .sendBuffer(arguments, handler);

@@ -43,7 +43,7 @@ public class ApiHandlerImpl implements ApiHandler {
             "</head>" +
             "<body>" +
             "<p>Homepage is still under construction, check it back later.</p>" +
-            "<a href=\"https://github.com/Trumeet/MiPushFramework\">GitHub</a>" +
+            "<a href=\"https://github.com/MiPushFramework/MiPushFramework\">GitHub</a>" +
             "</body>" +
             "</html>";
 
@@ -54,7 +54,7 @@ public class ApiHandlerImpl implements ApiHandler {
             "</head>" +
             "<body>" +
             "<p>Homepage is still under construction, check it back later.</p>" +
-            "<a href=\"https://github.com/Trumeet/MiPushTester\">GitHub</a>" +
+            "<a href=\"https://github.com/MiPushFramework/MiPushTester\">GitHub</a>" +
             "</body>" +
             "</html>";
 
@@ -159,8 +159,9 @@ public class ApiHandlerImpl implements ApiHandler {
             extras.put(Constants.EXTRA_CLIENT_VERSION, routingContext.request().getHeader(Constants.HEADER_VERSION));
             extras.put(Constants.EXTRA_REQUEST_LOCALE, routingContext.request().getHeader(Constants.HEADER_LOCALE));
             extras.put(Constants.EXTRA_REQUEST_TIME, Long.toString(System.currentTimeMillis()));
-            getMiPushApi().pushOnceToId(message,
-                    new String[]{ request.getRegistrationId() },
+            getMiPushApi().pushOnce(message,
+                    request.getRegistrationId(),
+                    request.getRegIdType(),
                     extras,
                     request.isGlobal(),
                     ar -> {
@@ -215,11 +216,11 @@ public class ApiHandlerImpl implements ApiHandler {
             // Only "Authorized" offical clients can access this service.
             case Constants.TESTER_CLIENT_ID:
                 repo = "MiPushTester";
-                owner = "Trumeet";
+                owner = "MiPushFramework";
                 break;
             case Constants.FRAMEWORK_CLIENT_ID:
                 repo = "MiPushFramework";
-                owner = "Trumeet";
+                owner = "MiPushFramework";
                 break;
             default:
                 logger.warn("An unknown client is attempting to get update status: " + productId);

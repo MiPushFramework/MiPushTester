@@ -35,6 +35,8 @@
                 android:id="@+id/layout_accept_time"
                 bind:uiHandler="@{uiHandler}"
                 bind:acceptTime="@{acceptTime}"/>
+            <include layout="@layout/item_account_alias"
+                bind:uiHandler="@{uiHandler}" />
             <include layout="@layout/item_reset"
                 bind:uiHandler="@{uiHandler}" />
         </LinearLayout>

@@ -3,7 +3,8 @@ package moe.yuuta.mipushtester.push
 import com.google.gson.annotations.SerializedName
 
 @SuppressWarnings("unused")
-data class PushRequest(@SerializedName("registration_id") var registrationId: String? = null,
+data class PushRequest(@SerializedName("registration_id") var registrationId: String? = null /* The registration key should be usec for other type of values */,
+                       @SerializedName("reg_id_type") var registrationIdType: Int? = null,
                        @SerializedName("delay_ms") var delayMs: Int? = null,
                        @SerializedName("pass_through") var passThrough: Boolean? = null,
                        @SerializedName("notify_foreground") var notifyForeground: Boolean? = null,

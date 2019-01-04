@@ -15,12 +15,16 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.navigation.Navigation
+import com.annimon.stream.Stream
+import com.annimon.stream.function.Function
+import com.annimon.stream.function.Predicate
 import com.elvishew.xlog.XLog
 import com.google.android.material.snackbar.Snackbar
 import moe.shizuku.preference.*
 import moe.yuuta.common.Constants
 import moe.yuuta.mipushtester.BuildConfig
 import moe.yuuta.mipushtester.R
+import moe.yuuta.mipushtester.accountAlias.AccountAliasStore
 import moe.yuuta.mipushtester.api.APIManager
 import moe.yuuta.mipushtester.status.RegistrationStatus
 import java.io.IOException
@@ -30,6 +34,7 @@ class SendPushFragment : PreferenceFragment(), Callback {
     val logger = XLog.tag(SendPushFragment::class.simpleName).build()
 
     private var mTask: PushTask? = null
+    private val identities: MutableList<AccountOrAliasIndex> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +92,44 @@ class SendPushFragment : PreferenceFragment(), Callback {
                 if ("China".equals(RegistrationStatus.get(requireContext()).regRegion.get()))
                     getString(R.string.send_push_global_summary_may_not_be_able_to_receive_after_enabling) else
                     getString(R.string.send_push_global_summary_may_not_be_able_to_receive_after_disabling)))
+
+        // Load identities
+        identities.add(AccountOrAliasIndex(
+                Constants.REG_ID_TYPE_REG_ID,
+                RegistrationStatus.get(requireContext()).regId.get()!!,
+                getString(R.string.send_push_identity_reg_id)
+        ))
+        for (alias in AccountAliasStore.get(requireContext()).getAlias()) {
+            identities.add(AccountOrAliasIndex(
+                    Constants.REG_ID_TYPE_ALIAS,
+                    alias,
+                    getString(R.string.send_push_identity_alias_prefix, alias)
+            ))
+        }
+        for (account in AccountAliasStore.get(requireContext()).getAccount()) {
+            identities.add(AccountOrAliasIndex(
+                    Constants.REG_ID_TYPE_ACCOUNT,
+                    account,
+                    getString(R.string.send_push_identity_account_prefix, account)
+            ))
+        }
+        (findPreference("send_identity") as ListPreference)
+                .entries = Stream.of(identities)
+                        .map(object : Function<AccountOrAliasIndex, CharSequence> {
+                            override fun apply(t: AccountOrAliasIndex?): CharSequence =
+                                    t!!.displayName
+                        })
+                        .toList()
+                        .toTypedArray()
+        (findPreference("send_identity") as ListPreference)
+                .entryValues = Stream.of(identities)
+                        .map(object : Function<AccountOrAliasIndex, CharSequence> {
+                            override fun apply(t: AccountOrAliasIndex?): CharSequence =
+                                    t!!.value
+                        })
+                        .toList()
+                        .toTypedArray()
+        (findPreference("send_identity") as ListPreference).setValueIndex(0)
     }
 
     private fun updateUriLimitStatus(@Nullable newValue: Any?) {
@@ -125,7 +168,15 @@ class SendPushFragment : PreferenceFragment(), Callback {
     private fun handleSend () {
         if (mTask?.isCancelled == false) return
         val request = PushRequest()
-        request.registrationId = (RegistrationStatus.get(requireContext()).regId.get() ?: "")
+        val accountOrAliasIndex = Stream.of(identities)
+                .filter(object : Predicate<AccountOrAliasIndex> {
+                    override fun test(value: AccountOrAliasIndex?): Boolean =
+                            (findPreference("send_identity") as ListPreference)
+                                    .entry.equals(value!!.displayName)
+                })
+                .toList()[0]
+        request.registrationIdType = accountOrAliasIndex.type
+        request.registrationId = accountOrAliasIndex.value
         try {
             val delayStr = (findPreference("delay") as EditTextPreference).text
             val delay = Integer.parseInt(delayStr)

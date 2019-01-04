@@ -24,13 +24,28 @@
 <summary><font color="%2$s">The ID which represents your region when you register push. It may not associated with your IP.</font></summary>
     ]]></string>
     <string name="get_reg_info_unavailable">Unavailable (Only available after you register)</string>
+    <string name="clear_notifications">Clear all notifications</string>
+    <string name="done">Done</string>
     <string name="close">Close</string>
     <string name="reset_title">Reset</string>
     <string name="reset_summary">Delete all push settings, include your registration ID</string>
     <string name="reset_and_restart">Reset and restart</string>
     <string name="reset_toast">Cleaning, please wait until it starts automatically.....</string>
 
+    <string name="account_card_title">Account and alias</string>
+    <string name="account_card_description">Set your account and alias for this device, you can send push to this alias or account</string>
+    <string name="account_card_current"><![CDATA[
+Current alias: <b>%1$s</b>, account: <b>%2$s</b>
+    ]]></string>
+    <string name="account_card_set_alias">Set alias</string>
+    <string name="account_card_set_account">Set account name</string>
+
     <!-- Send Push -->
+    <string name="send_push_identity">Your identity</string>
+    <string name="send_push_identity_summary">Select the method to identify your device</string>
+    <string name="send_push_identity_reg_id">(Your registration id)</string>
+    <string name="send_push_identity_alias_prefix">(Alias) %1$s</string>
+    <string name="send_push_identity_account_prefix">(Account) %1$s</string>
     <string name="send_push_delay">Delay</string>
     <string name="send_push_delay_item_summary">Delay this message</string>
     <string name="send_push_delay_summary">Delay send this message, from 0 seconds to 60 seconds.</string>
@@ -134,4 +149,17 @@ Current: <b>%02d:%02d-%02d:%02d</b> %5$s
     <string name="accept_time_card_current_never">(Never)</string>
     <string name="modify_start_time">Modify start time</string>
     <string name="modify_end_time">Modify end time</string>
+    <string name="add">Add</string>
+    <string name="modify">Modify</string>
+    <string name="remove">Remove</string>
+    <string name="alias">Alias</string>
+    <string name="account">Account</string>
+    <string name="modify_alias">Modify the alias</string>
+    <string name="modify_account">Modify the account</string>
+    <string name="add_alias">Add an alias name. You can use this name to send push</string>
+    <string name="add_account">Add an account name. You can use this name to send push</string>
+    <string name="alias_empty_title">You don\'t have any alias</string>
+    <string name="alias_empty_description">To add a new one, click the button on right bottom corner</string>
+    <string name="account_empty_title">You don\'t have any account</string>
+    <string name="account_empty_description">To add a new one, click the button on right bottom corner</string>
 </resources>

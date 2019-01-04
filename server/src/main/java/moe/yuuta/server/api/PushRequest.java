@@ -14,12 +14,18 @@ import static moe.yuuta.common.Constants.DISPLAY_LIGHTS;
 import static moe.yuuta.common.Constants.DISPLAY_SOUND;
 import static moe.yuuta.common.Constants.DISPLAY_VIBRATE;
 import static moe.yuuta.common.Constants.PUSH_DELAY_MS_MAX;
+import static moe.yuuta.common.Constants.REG_ID_TYPE_ACCOUNT;
+import static moe.yuuta.common.Constants.REG_ID_TYPE_ALIAS;
+import static moe.yuuta.common.Constants.REG_ID_TYPE_REG_ID;
 
 @SuppressWarnings("unused")
 class PushRequest {
     @JsonProperty("registration_id")
     @Nonnull(nonEmpty = true)
     private String registrationId;
+    @JsonProperty("reg_id_type")
+    @NumberIn({REG_ID_TYPE_REG_ID, REG_ID_TYPE_ACCOUNT, REG_ID_TYPE_ALIAS})
+    private int regIdType;
     @JsonProperty("delay_ms")
     @GreatLess(value = 0, greater = true, equal = true)
     @GreatLess(value = PUSH_DELAY_MS_MAX, lesser = true, equal = true)
@@ -217,5 +223,14 @@ class PushRequest {
 
     public void setPassThroughNotification(boolean passThroughNotification) {
         this.passThroughNotification = passThroughNotification;
+    }
+
+
+    public int getRegIdType() {
+        return regIdType;
+    }
+
+    public void setRegIdType(int regIdType) {
+        this.regIdType = regIdType;
     }
 }

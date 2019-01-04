@@ -2,6 +2,10 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        android:key="send_identity"
+        android:title="@string/send_push_identity"
+        android:summary="@string/send_push_identity_summary" />
     <EditTextPreference
         android:key="delay"
         android:numeric="integer"
