@@ -9,7 +9,7 @@ WORKDIR /app/server
 RUN apk add git && \
     chmod +x ./gradlew && \
     rm -rf app/ && \
-    ./gradlew wrapper --gradle-version=4.10.1 --distribution-type=bin --distributionUrl="https://services.gradle.org/distributions/gradle-4.10.1-bin.zip" && \
+    ./gradlew wrapper --gradle-version=4.10.1 --distribution-type=bin && \
     ./gradlew exportVersion && \
     ./gradlew :common:build && \
     ./gradlew :server:shadowJar && \
