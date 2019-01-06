@@ -162,4 +162,6 @@ Current: <b>%02d:%02d-%02d:%02d</b> %5$s
     <string name="alias_empty_description">To add a new one, click the button on right bottom corner</string>
     <string name="account_empty_title">You don\'t have any account</string>
     <string name="account_empty_description">To add a new one, click the button on right bottom corner</string>
+    <string name="command_register">Register</string>
+    <string name="push_receiver_command_error">%1$s fail, error code %2$s</string>
 </resources>
