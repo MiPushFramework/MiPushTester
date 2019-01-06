@@ -1,16 +1,16 @@
 package moe.yuuta.server.formprocessor;
 
 class SampleObject {
-    @FormData(value = "normalString")
+    @FormData(name = "normalString")
     private String normalString = "haoye";
 
-    @FormData(value = "normalInteger")
+    @FormData(name = "normalInteger")
     private int normalInteger = 123;
 
-    @FormData(value = "encodeString", urlEncode = true)
+    @FormData(name = "encodeString", urlEncode = true)
     private String encodeString = "   Ri kk a";
 
-    @FormData(value = "ignorableInteger")
+    @FormData(name = "ignorableInteger")
     private int ignorableInteger = 0;
 
     public String getNormalString() {

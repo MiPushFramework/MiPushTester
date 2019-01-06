@@ -1,31 +1,7 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-buildscript {
-    ext.kotlin_version = '1.3.11'
-    repositories {
-        google()
-        mavenCentral()
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0-alpha09'
-        classpath 'com.google.android.gms:oss-licenses-plugin:0.9.4'
-        classpath 'io.fabric.tools:gradle:1.27.0'
-        classpath "com.github.triplet.gradle:play-publisher:2.0.0-rc2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
 allprojects {
     repositories {
-        google()
         mavenCentral()
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
     }
 }
 
@@ -40,6 +16,7 @@ ext {
     vertxVersion = "3.6.0"
     versionCode = Integer.parseInt("${gitCommitCount}")
     versionName = "${version}"
+    kotlin_version = '1.3.11'
 }
 
 task exportVersion(type: Exec) {

@@ -1,22 +1,22 @@
 package moe.yuuta.server.dataverify;
 
 public class SampleObject {
-    @GreatLess(value = 0, equal = true)
+    @GreatLess(targetValue = 0, equal = true)
     public int equalZero = 0;
 
-    @GreatLess(value = 0, greater = true)
+    @GreatLess(targetValue = 0, greater = true)
     public int greaterZero = 1;
 
-    @GreatLess(value = 0, greater = true, equal = true)
+    @GreatLess(targetValue = 0, greater = true, equal = true)
     public int greaterOrEqualZero;
 
-    @GreatLess(value = 0, lesser = true)
+    @GreatLess(targetValue = 0, lesser = true)
     public int lesserZero = -1;
 
-    @GreatLess(value = 0, lesser = true, equal = true)
+    @GreatLess(targetValue = 0, lesser = true, equal = true)
     public int lesserOrEqualZero;
 
-    @GreatLess(value = 0, lesser = true, equal = true)
+    @GreatLess(targetValue = 0, lesser = true, equal = true)
     public String lesserOrEqualInvalidNonNumber;
 
     @Nonnull
@@ -31,13 +31,13 @@ public class SampleObject {
     @Nonnull(nonEmpty = true)
     public Object nonNullCannotEmptyObject = new Object();
 
-    @NumberIn(value = {1, 2, 3})
+    @NumberIn(targetValues = {1, 2, 3})
     public int mustIn123Int = 1;
 
-    @StringIn(value = {"Apple", "Pear", "Rikka"})
+    @StringIn(targetValues = {"Apple", "Pear", "Rikka"})
     public String mustInApplePearRikkaString = "Rikka";
 
-    @GreatLessGroup(value = { @GreatLess(value = 0, lesser = true),
-                                @GreatLess(value = -3, greater = true)})
+    @GreatLessGroup(targetValues = { @GreatLess(targetValue = 0, lesser = true),
+                                @GreatLess(targetValue = -3, greater = true)})
     public int shouldGreaterThanN10AndLesserThan0Int = -1;
 }

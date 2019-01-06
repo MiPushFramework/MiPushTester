@@ -35,7 +35,7 @@ public class TopicRegistryTest {
         mockVerticle = Mockito.spy(new TopicExecuteVerticle() {
         });
         Mockito.when(registry.getDefaultTopics()).thenReturn(Arrays.asList(new Topic("title", "description",
-                "mock_topic", mockVerticle)));
+                "mock_topic", mockVerticle, null, null, null)));
 
         Async async = testContext.async();
         // Registering topic & unregistering topic and some stuff about Topic/register/unregister and TopicExecuteVerticle
@@ -58,12 +58,12 @@ public class TopicRegistryTest {
         registry.clear(vertx, ar -> {
             assertTrue(ar.succeeded());
             assertNull(ar.cause());
-            assertEquals(0, registry.allTopics().size());
             try {
                 Mockito.verify(mockVerticle, Mockito.times(1)).onUnRegister(Mockito.any(Future.class));
             } catch (Exception e) {
                 testContext.fail(e);
             }
+            assertEquals(0, registry.allTopics().size());
             async.complete();
         });
     }
