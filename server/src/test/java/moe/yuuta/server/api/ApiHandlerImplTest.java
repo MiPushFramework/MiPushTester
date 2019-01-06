@@ -35,6 +35,8 @@ import moe.yuuta.server.mipush.Message;
 import moe.yuuta.server.mipush.MiPushApi;
 import moe.yuuta.server.mipush.SendMessageResponse;
 import moe.yuuta.server.res.Resources;
+import moe.yuuta.server.topic.Topic;
+import moe.yuuta.server.topic.TopicExecuteVerticle;
 import moe.yuuta.server.topic.TopicRegistry;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
@@ -51,7 +53,7 @@ public class ApiHandlerImplTest {
     }
 
     private Vertx vertx;
-    private ApiHandler apiHandler;
+    private ApiHandlerImpl apiHandler;
     private ApiVerticle apiVerticle; // We won't build a mocked RoutingContext
     private volatile SendPushCallback sendPushCallback;
     private volatile GetLatestReleaseCallback getLatestReleaseCallback;
@@ -59,7 +61,7 @@ public class ApiHandlerImplTest {
     @Before
     public void setUp (TestContext testContext) {
         vertx = Vertx.vertx();
-        apiHandler = Mockito.spy(ApiHandler.apiHandler(vertx));
+        apiHandler = Mockito.spy(new ApiHandlerImpl(vertx));
         Mockito.when(apiHandler.getMiPushApi()).thenReturn(new MiPushApi(null) {
             @Override
             public void pushOnce(Message message, String regId, int regIdType, Map<String, String> customExtras, boolean useGlobal, Handler<AsyncResult<HttpResponse<SendMessageResponse>>> handler) {
@@ -81,6 +83,7 @@ public class ApiHandlerImplTest {
             }
         });
         apiVerticle = Mockito.spy(new ApiVerticle());
+        // It will be called BEFORE started, so we have to mock it before deploying
         Mockito.when(apiVerticle.getApiHandler()).thenReturn(apiHandler);
         vertx.deployVerticle(apiVerticle, testContext.asyncAssertSuccess());
     }
@@ -379,7 +382,7 @@ public class ApiHandlerImplTest {
                 testContext.assertEquals(message.getNotifyType(), Message.NOTIFY_TYPE_DEFAULT_VIBRATE);
                 testContext.assertEquals(message.getSoundUri(), soundUri);
                 testContext.assertNull(message.getWebUri());
-                testContext.assertEquals(message.getIntentUri(), clickAction);
+                testContext.assertEquals(message.getIntentUrl(), clickAction);
                 testContext.assertEquals(message.getNotifyEffect(), Message.NOTIFY_NOTIFY_EFFECT_SPECIFIED_ACTIVITY);
                 testContext.assertEquals(message.getCallback(), callBack);
                 testContext.assertEquals(message.getLocale(), ApiUtils.separateListToComma(localesIn));
@@ -445,15 +448,27 @@ public class ApiHandlerImplTest {
     @Test(timeout = 2000)
     public void handleGetTopicList (TestContext testContext) {
         Async async = testContext.async();
-        CompositeFuture.all(Future.<CompositeFuture>future(f -> TopicRegistry.getInstance().init(vertx, f)),
+        TopicRegistry registry = Mockito.spy(new TopicRegistry());
+        List<Topic> topics = Arrays.asList(
+                // Don't mock resources here
+                new Topic("push_title",
+                        "push_title",
+                        "mock_topic",
+                        new TopicExecuteVerticle() {
+                        },
+                        null, null, null)
+        );
+        Mockito.when(registry.getDefaultTopics()).thenReturn(topics);
+        Mockito.when(apiHandler.getTopicRegistry()).thenReturn(registry);
+        testContext.assertEquals(registry, apiHandler.getTopicRegistry());
+        testContext.assertEquals(0, registry.allTopics().size());
+        CompositeFuture.all(Future.<CompositeFuture>future(f -> registry.init(vertx, f)),
                             Future.future(f -> {
                                 vertx.createHttpClient().get(8080, "localhost", ApiVerticle.ROUTE_TEST_TOPIC, httpClientResponse -> {
                                     testContext.assertEquals(200, httpClientResponse.statusCode());
                                     testContext.assertEquals("application/json".trim().toLowerCase(), httpClientResponse.getHeader("Content-Type").trim().toLowerCase());
                                     httpClientResponse.bodyHandler(buffer -> {
-                                        testContext.assertEquals(ApiUtils.tryObjectToJson(TopicRegistry
-                                                .getInstance()
-                                                .allTopics()
+                                        testContext.assertEquals(ApiUtils.tryObjectToJson(topics
                                                 .stream()
                                                 .peek(topic -> {
                                                     topic.setTitle(Resources.getString(topic.getTitleResource(),
@@ -463,16 +478,20 @@ public class ApiHandlerImplTest {
                                                 })
                                                 .collect(Collectors.toList())
                                         ).trim(), buffer.toString().trim());
-                                        f.complete();
+                                        // Topic should be cleared AFTER verifying
+                                        registry.clear(vertx, ar -> {
+                                            testContext.assertTrue(ar.succeeded());
+                                            f.complete();
+                                        });
                                     });
                                 })
                                 .putHeader("Accept-Language", Locale.ENGLISH.toString())
                                 .end();
-                            }),
-                            Future.<CompositeFuture>future(f -> TopicRegistry.getInstance().clear(vertx, f)))
+                            }))
                 .setHandler(ar -> {
-                    testContext.assertTrue(ar.succeeded());
+                    if (ar.cause() != null) ar.cause().printStackTrace();
                     testContext.assertNull(ar.cause());
+                    testContext.assertTrue(ar.succeeded());
                     async.countDown();
                 });
     }

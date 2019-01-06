@@ -1,5 +1,6 @@
 package moe.yuuta.server.api;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,8 +12,6 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.RoutingContext;
-import moe.yuuta.server.github.GitHubApi;
-import moe.yuuta.server.mipush.MiPushApi;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 
@@ -27,41 +26,32 @@ public class ApiVerticleTest {
         vertx = Vertx.vertx();
         stubApiHandler = new ApiHandler() {
             @Override
-            public void handlePush(RoutingContext routingContext) {
+            public void handlePush(@NotNull RoutingContext routingContext) {
                 routingContext.response().setStatusCode(NO_CONTENT.code()).end();
             }
 
             @Override
-            public void handleFrameworkIndex(RoutingContext routingContext) {
+            public void handleFrameworkIndex(@NotNull RoutingContext routingContext) {
                 routingContext.response().setStatusCode(NO_CONTENT.code()).end();
             }
 
             @Override
-            public void handleTesterIndex(RoutingContext routingContext) {
+            public void handleTesterIndex(@NotNull RoutingContext routingContext) {
                 routingContext.response().setStatusCode(NO_CONTENT.code()).end();
             }
 
             @Override
-            public MiPushApi getMiPushApi() {
-                return null;
-            }
-
-            @Override
-            public void handleUpdate(RoutingContext routingContext) {
+            public void handleUpdate(@NotNull RoutingContext routingContext) {
                 routingContext.response().setStatusCode(NO_CONTENT.code()).end();
             }
 
             @Override
-            public GitHubApi getGitHubApi() {
-                return null;
-            }
-
-            @Override
-            public void handleGetTopicList(RoutingContext routingContext) {
+            public void handleGetTopicList(@NotNull RoutingContext routingContext) {
                 routingContext.response().setStatusCode(NO_CONTENT.code()).end();
             }
         };
         apiVerticle = Mockito.spy(new ApiVerticle());
+        // It will be called BEFORE started, so we have to mock it before deploying
         Mockito.when(apiVerticle.getApiHandler()).thenReturn(stubApiHandler);
         vertx.deployVerticle(apiVerticle, testContext.asyncAssertSuccess());
     }
