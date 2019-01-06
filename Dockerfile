@@ -18,4 +18,4 @@ RUN apk add git && \
 FROM openjdk:8u171-jre-alpine3.8 as environment
 WORKDIR /app
 COPY --from=builder /server.jar .
-ENTRYPOINT java -jar /app/server.jar
+CMD java -jar /app/server.jar
