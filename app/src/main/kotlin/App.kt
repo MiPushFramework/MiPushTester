@@ -32,7 +32,10 @@ class App : Application() {
         XLog.init(logConfiguration, androidPrinter, filePrinter)
 
         if (!BuildConfig.DEBUG && !BuildConfig.FABRIC_KEY.equals("disabled")) {
-            Fabric.with(this, Crashlytics(), Answers())
+            Fabric.with(Fabric.Builder(this)
+                    .kits(Crashlytics(), Answers())
+                    .debuggable(true)
+                    .build())
         }
         val currentHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler(object : Thread.UncaughtExceptionHandler {
