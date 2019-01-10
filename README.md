@@ -14,6 +14,8 @@
 
 # MiPush Tester (Alpha)
 
+Simplified Chinese document（简体中文文档）: [README](README_zh-rCN.md)
+
 Want to build it yourself? Please read [Build guides](BUILD.md)
 
 Want to contribute this project? Please read [Contribution guide](CONTRIBUTION.md)
