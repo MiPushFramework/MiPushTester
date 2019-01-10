@@ -161,4 +161,13 @@
     <string name="account_empty_description">点按右下角的按钮添加</string>
     <string name="command_register">注册</string>
     <string name="push_receiver_command_error">%1$s失败，错误码：%2$s</string>
+
+    <!-- Switch On/Off  -->
+    <string name="switch_on_text">开启</string>
+    <string name="switch_off_text">关闭</string>
+
+    <string name="privacy_protection_title">隐私保护</string>
+    <string name="privacy_protection_summary">开启隐私保护后，我们会尝试防止小米推送 SDK 读取一些内容，如本应用申请的权限等。开启后可能无法注册或推送，请谨慎使用。开启/关闭后需要重启应用。</string>
+
+    <string name="restart">重启</string>
 </resources>

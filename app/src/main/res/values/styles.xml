@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="preferenceTheme">@style/AppTheme.PreferenceTheme</item>
+        <item name="switchBarTheme">@style/ThemeOverlay.SwitchBar.Settings</item>
     </style>
 
     <style name="CardButton">
@@ -19,5 +20,28 @@
 
     <style name="AppTheme.PreferenceTheme" parent="PreferenceThemeOverlay">
         <item name="simpleMenuPreferenceStyle">@style/Preference.SimpleMenuPreference</item>
+    </style>
+
+    <style name="TextAppearance.Switch" parent="@style/TextAppearance.AppCompat.Title" />
+
+    <style name="Widget.SwitchBar.Switch" parent="@style/Widget.AppCompat.CompoundButton.Switch">
+        <item name="trackTint">@color/switchbar_switch_track_tint</item>
+        <item name="android:thumbTint">@color/switchbar_switch_thumb_tint</item>
+        <item name="android:minHeight">@dimen/min_tap_target_size</item>
+    </style>
+
+    <style name="TextAppearance.Small" parent="@style/TextAppearance.AppCompat.Small" />
+
+    <style name="TextAppearance.Small.SwitchBar">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ThemeOverlay.SwitchBar.Settings" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="switchBarMarginStart">@dimen/switchbar_subsettings_margin_start</item>
+        <item name="switchBarMarginEnd">@dimen/switchbar_subsettings_margin_end</item>
+        <item name="switchBarBackgroundColor">@color/switch_bar_background</item>
+        <item name="switchBarBackgroundActivatedColor">?attr/colorAccent</item>
     </style>
 </resources>

@@ -4,6 +4,9 @@
         android:id="@+id/action_get_info"
         android:title="@string/get_reg_info" />
     <item
+        android:id="@+id/action_piracy_protection"
+        android:title="@string/privacy_protection_title" />
+    <item
         android:id="@+id/action_clear_notifications"
         android:title="@string/clear_notifications" />
     <item

@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_mainFragment_to_setAccountFragment"
             app:destination="@id/setAccountFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_setPiracyProtectionFragment"
+            app:destination="@id/setPiracyProtectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/sendPushFragment"
@@ -42,4 +45,9 @@
         android:name="moe.yuuta.mipushtester.accountAlias.SetAccountFragment"
         android:label="@string/account"
         tools:layout="@layout/fragment_set_list" />
+    <fragment
+        android:id="@+id/setPiracyProtectionFragment"
+        android:name="moe.yuuta.mipushtester.push.SetPiracyProtectionFragment"
+        android:label="@string/privacy_protection_title"
+        tools:layout="@layout/fragment_set_piracy_protection" />
 </navigation>
