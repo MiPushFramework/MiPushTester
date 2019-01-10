@@ -25,7 +25,7 @@
         </activity>
         <provider
             android:process=":push"
-            android:enabled="true"
+            android:enabled="false"
             android:exported="false"
             android:authorities="${applicationId}.push.internal.PushSdkWraper.CoreProvider"
             android:name=".push.internal.CoreProvider" />

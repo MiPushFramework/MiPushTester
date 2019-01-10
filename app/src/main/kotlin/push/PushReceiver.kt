@@ -12,6 +12,8 @@ import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 import moe.yuuta.mipushtester.status.RegistrationStatus
 
 class PushReceiver : PushMessageReceiver() {
+    private val logger = XLog.tag(PushReceiver::class.simpleName).build()
+
     override fun onReceivePassThroughMessage(context: Context, miPushMessage: MiPushMessage) {
         Handler(Looper.getMainLooper()).post(object : Runnable {
             override fun run() {
@@ -24,13 +26,26 @@ class PushReceiver : PushMessageReceiver() {
         .putExtra(PushMessageHelper.KEY_MESSAGE, miPushMessage))
     }
 
-    override fun onReceiveRegisterResult(context: Context, message: MiPushCommandMessage) {
+    override fun onCommandResult(context: Context, message: MiPushCommandMessage) {
         val command = message.command
-        XLog.i("Handle register result: $command")
-        if (PushSdkWrapper.COMMAND_REGISTER.equals(command)) {
-            XLog.i("Register result = " + message.resultCode)
-            RegistrationStatus.get(context).registered.set(message.resultCode == (ErrorCode.SUCCESS.toLong()))
+        logger.i("Handle command: $command, code： ${message.resultCode}")
+        val commandHumanValue: String
+        commandHumanValue = when(command) {
+            PushSdkWrapper.COMMAND_REGISTER -> {
+                RegistrationStatus.get(context).registered.set(message.resultCode == (ErrorCode.SUCCESS.toLong()))
+                context.getString(R.string.command_register)
+            }
+            else ->
+                message.command.toString()
+        }
+        if (message.resultCode != ErrorCode.SUCCESS.toLong()) {
+            logger.e("Received error code ${message.resultCode}")
+            Handler(Looper.getMainLooper()).post(object : Runnable {
+                override fun run() {
+                    Toast.makeText(context.applicationContext, context.getString(R.string.push_receiver_command_error,
+                            commandHumanValue, message.resultCode.toString()), Toast.LENGTH_LONG).show()
+                }
+            })
         }
     }
-
 }

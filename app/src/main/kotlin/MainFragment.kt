@@ -1,17 +1,12 @@
 package moe.yuuta.mipushtester
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.*
 import android.content.Context.MODE_PRIVATE
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper.getMainLooper
-import android.os.Process
 import android.text.Html
 import android.view.*
 import android.widget.TimePicker
@@ -36,6 +31,7 @@ import moe.yuuta.mipushtester.push.internal.PushSdkWrapper
 import moe.yuuta.mipushtester.status.RegistrationStatus
 import moe.yuuta.mipushtester.topic.TopicStore
 import moe.yuuta.mipushtester.update.Update
+import moe.yuuta.mipushtester.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -200,20 +196,7 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         requireContext().getSharedPreferences("mipush_oc", MODE_PRIVATE).edit().clear().commit()
         Toast.makeText(requireContext(), R.string.reset_toast, Toast.LENGTH_LONG).show()
 
-        val mStartActivity = Intent(requireContext(), MainActivity::class.java)
-        val mPendingIntentId = 2333
-        val mPendingIntent = PendingIntent.getActivity(requireContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT)
-        val mgr = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
-
-        Handler(getMainLooper()).postDelayed(object : Runnable {
-            override fun run () {
-                Navigation.findNavController(requireActivity(), R.id.nav_host).navigateUp()
-                System.exit(0)
-                Process.killProcess(Process.myPid())
-                Runtime.getRuntime().exit(0)
-            }
-        }, 100)
+        Utils.restart(requireContext())
     }
 
     private fun handleGetInfo() {
@@ -255,6 +238,10 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         when(item.itemId) {
             R.id.action_get_info -> {
                 handleGetInfo()
+                true
+            }
+            R.id.action_piracy_protection -> {
+                Navigation.findNavController(requireActivity(), R.id.nav_host).navigate(R.id.action_mainFragment_to_setPiracyProtectionFragment)
                 true
             }
             R.id.action_clear_notifications -> {

@@ -1,8 +1,10 @@
 package moe.yuuta.mipushtester.push.internal
 
 import android.app.Application
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.annotation.NonNull
 import com.oasisfeng.condom.*
 import com.xiaomi.mipush.sdk.MiPushClient
@@ -22,11 +24,21 @@ object PushSdkWrapper {
     const val COMMAND_SET_ACCEPT_TIME = MiPushClient.COMMAND_SET_ACCEPT_TIME
     const val PREF_EXTRA = MiPushClient.PREF_EXTRA
 
-    private fun wrapContext(@NonNull context: Context): Application =
+    private fun _wrapContext(@NonNull context: Context): Application =
         // Wrap the context with Condom to prevent it check the permissions.
         // Use it with caution - it may cause unexpected behaviours. We do not
         // want to "optimize" the SDK to get the realist results.
         CondomContext.wrap(context.applicationContext, "MiPushSDK", createOptions()).applicationContext as Application
+
+    fun isDisabled(@NonNull context: Context): Boolean =
+            (context.packageManager.getComponentEnabledSetting(ComponentName(context, CoreProvider::class.java))
+                    == PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
+
+    private fun wrapContext(@NonNull context: Context): Application =
+            if (isDisabled(context))
+                context.applicationContext as Application
+            else
+                _wrapContext(context)
 
     private fun createOptions(): CondomOptions =
             CondomOptions()

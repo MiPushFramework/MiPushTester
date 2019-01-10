@@ -77,13 +77,10 @@ You can't use the same package name as the "Official" builds, you should change 
 
 Just copy `app/xmpush.properties.template` to `app/xmpush.properties`, and change the values.
 
-**Gradle Android plugin only supports Gradle 5.1+, so use 5.1 to build the APK.**
 Finally, run
 
 ```shell
-$./gradlew wrapper --gradle-version=5.1-milestone-1 --distribution-type=bin :app:assembleRelease
+$ ./gradlew :app:assembleRelease
 ```
 
 to generate the APK.
-
-After building, `gradle/wrapper` will be updated. **DO NOT COMMIT THEM**.

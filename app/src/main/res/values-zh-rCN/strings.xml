@@ -1,0 +1,173 @@
+<resources>
+    <string name="app_name">小米推送测试器</string>
+    <string name="status_not_registered">尚未注册（%1$s）</string>
+    <string name="status_registered">已注册（%1$s）</string>
+    <string name="status_miui_push_detected">系统推送</string>
+    <string name="status_miui_push_not_detected">未找到系统推送服务</string>
+    <string name="push_card_title">发给自己</string>
+    <string name="push_card_summary">向本设备推送一条消息并测试能否接收</string>
+    <string name="create_push">创建推送</string>
+    <string name="get_reg_info">注册信息</string>
+    <string name="copy_id">复制 ID</string>
+    <string name="get_reg_info_dialog"><![CDATA[
+    <h1>注册信息</h1>
+    <summary>这些信息来自小米推送组件，且会被自动更新。</summary>
+    <br />
+<h3>注册 ID：</h3>
+<tt>%1$s</tt>
+<br /><br />
+<summary><font color="%2$s">任何知道该 ID 的人都能向该设备发送推送。</font></summary>
+<br />
+<h3>注册区域标识符：</h3>
+<tt>%3$s</tt>
+<br /><br />
+<summary><font color="%2$s">它表明您注册的区域，不一定和您的 IP 地址有关。</font></summary>
+    ]]></string>
+    <string name="get_reg_info_unavailable">不可用（仅在注册后可用）</string>
+    <string name="clear_notifications">清除所有通知</string>
+    <string name="done">完毕</string>
+    <string name="close">关闭</string>
+    <string name="reset_title">重置</string>
+    <string name="reset_summary">删除所有推送设定，包含您的注册 ID</string>
+    <string name="reset_and_restart">重置并重启</string>
+    <string name="reset_toast">清理中，请等待自动重启.....</string>
+
+    <string name="account_card_title">账户及别名</string>
+    <string name="account_card_description">为本设备设定账户和别名，稍后可以使用这些身份来发送推送</string>
+    <string name="account_card_set_alias">设定别名</string>
+    <string name="account_card_set_account">设定账户名</string>
+
+    <!-- Send Push -->
+    <string name="send_push_identity">您的身份</string>
+    <string name="send_push_identity_summary">选择用于鉴定该设备的身份</string>
+    <string name="send_push_identity_reg_id">（您的注册 ID）</string>
+    <string name="send_push_identity_alias_prefix">（别名）%1$s</string>
+    <string name="send_push_identity_account_prefix">（账户）%1$s</string>
+    <string name="send_push_delay">延时</string>
+    <string name="send_push_delay_item_summary">延时接收该消息</string>
+    <string name="send_push_delay_summary">延时接收该消息，支持 0 至 60 秒</string>
+    <string name="send_push_display">显示方法</string>
+    <string name="send_push_display_summary">在您的设备上显示该通知的方式</string>
+    <string-array name="send_push_display_items_ui">
+        <item>全部</item>
+        <item>响铃</item>
+        <item>震动</item>
+        <item>指示灯</item>
+    </string-array>
+    <string-array name="send_push_display_items_id">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="send_push_pass_through">透传消息</string>
+    <string name="send_push_pass_through_summary">消息将被直接发至本应用且不显示通知（测试器会在收到后显示一个 Toast）</string>
+    <string name="send_push_click_action">点按操作</string>
+    <string name="send_push_click_action_type">类型</string>
+    <string name="send_push_click_action_type_summary">点按消息后执行操作的类型</string>
+    <string-array name="send_push_click_action_items_ui">
+        <item>启动本应用</item>
+        <item>打开指定网址</item>
+        <item>打开推送详情页</item>
+    </string-array>
+    <string-array name="send_push_click_action_items_id">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="send">发送</string>
+    <string name="url">网址</string>
+    <string name="send_push_click_action_url_summary">用于点按通知后的操作</string>
+    <string name="send_push_notify_foreground">在前台时接收</string>
+    <string name="send_push_notify_foreground_summary">当本应用处于前台时仍然接收推送</string>
+    <string name="send_push_enforce_wifi">仅在 WiFi 时接收</string>
+    <string name="send_push_enforce_wifi_summary">仅当您连接到 WiFi 网络后才接收消息</string>
+    <string name="send_push_sound_uri">使用自定义铃声</string>
+    <string name="send_push_sound_uri_summary">使用内置的自定义铃声替代系统默认。（铃声来自 Android 4.1.1，Apache 2 许可）</string>
+    <string name="error_delay_invalid">无效的延时</string>
+    <string name="error_url_invalid">网址格式错误</string>
+    <string name="send_push_sending">Sending</string>
+    <string name="send_push_fail">无法发送</string>
+    <string name="send_push_sent">已发送</string>
+    <string name="send_push_limits">限制</string>
+    <string name="send_push_limit_none">无</string>
+    <string name="send_push_limit_only_template">仅%1$s可以接收</string>
+    <string name="send_push_limit_cannot_template">%1$s不能接收</string>
+    <string name="send_push_limit_locale">语言</string>
+    <string name="send_push_limit_locale_summary">根据您的语言限制接收</string>
+    <string name="send_push_limit_version">版本</string>
+    <string name="send_push_limit_version_summary">根据您的客户端版本限制接收</string>
+    <string name="send_push_limit_model">型号</string>
+    <string name="send_push_limit_model_summary">根据您的设备型号限制接收</string>
+    <string-array name="send_push_limit_ev_default">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="send_push_global">使用国际服务器</string>
+    <string name="send_push_global_summary">切换到小米推送国际服务器，帮助非中国用户接收推送%1$s</string>
+    <string name="send_push_global_summary_may_not_be_able_to_receive_after_enabling"><![CDATA[
+<br /><b>开启后可能无法接收</b>
+    ]]></string>
+    <string name="send_push_global_summary_may_not_be_able_to_receive_after_disabling"><![CDATA[
+<br /><b>关闭后可能无法接收</b>
+    ]]></string>
+    <string name="send_push_pass_through_notification">透传消息</string>
+    <string name="send_push_pass_through_notification_summary">在透传模式下也显示通知栏消息</string>
+    <!-- Message detail -->
+    <string name="detail">消息 ID：%1$s\n\n测试器自定义参数：%2$s\n\n小米推送内置参数：\n%3$s\n\n透传：%4$s\n\n完整消息：\n%5$s\n\n设备信息：\n品牌：%6$s\n名称：%7$s\nMIUI 版本：%8$s</string>
+    <string name="detail_title">消息详情</string>
+    <string name="error_detail">详情</string>
+    <string name="share_logs">分享日志</string>
+    <string name="share_logs_chooser_title">把日志发给…</string>
+    <string name="view_on_github">在 GitHub 上查看</string>
+    <string name="error_need_register">该功能需要注册</string>
+    <string name="update_available">有新版本可用：%1$s</string>
+    <string name="view">查看</string>
+    <!-- Push Receiver -->
+    <string name="push_receiver_pass_through_received">收到透传推送，ID：%1$s</string>
+    <!-- Topics -->
+    <string name="title_topics">主题</string>
+    <string name="topic_action_browse">浏览主题</string>
+    <string name="topic_action_title">订阅主题</string>
+    <string name="topic_action_description">订阅一些由作者创建的主题，我们会定期向它们发送消息</string>
+    <string name="error_load_topics">无法获取主题列表</string>
+    <string name="error_description_global">检查您的网络连接并再试一次</string>
+    <string name="retry">重试</string>
+    <string name="topic_empty_title">暂时为空</string>
+    <string name="topic_empty_description">我们将会加入更多主题，请稍后再试</string>
+    <!-- Accept Time -->
+    <string name="accept_time_card_title">接收时间段</string>
+    <string name="accept_time_card_description">设定允许接收推送的时间段。在它之外收到的消息将会被推迟</string>
+    <string name="accept_time_card_current"><![CDATA[
+当前：<b>%02d:%02d-%02d:%02d</b> %5$s
+    ]]></string>
+    <string name="accept_time_card_current_always">（始终接收）</string>
+    <string name="accept_time_card_current_never">（永不接收）</string>
+    <string name="modify_start_time">修改开始时间</string>
+    <string name="modify_end_time">修改结束时间</string>
+    <string name="add">添加</string>
+    <string name="modify">修改</string>
+    <string name="remove">删除</string>
+    <string name="alias">别名</string>
+    <string name="account">账户</string>
+    <string name="modify_alias">修改别名</string>
+    <string name="modify_account">修改账户</string>
+    <string name="add_alias">添加别名，您可以用该身份推送</string>
+    <string name="add_account">添加账户名，您可以用该身份推送</string>
+    <string name="alias_empty_title">您没有设置任何别名</string>
+    <string name="alias_empty_description">点按右下角的按钮添加</string>
+    <string name="account_empty_title">您没有设置任何账户</string>
+    <string name="account_empty_description">点按右下角的按钮添加</string>
+    <string name="command_register">注册</string>
+    <string name="push_receiver_command_error">%1$s失败，错误码：%2$s</string>
+
+    <!-- Switch On/Off  -->
+    <string name="switch_on_text">开启</string>
+    <string name="switch_off_text">关闭</string>
+
+    <string name="privacy_protection_title">隐私保护</string>
+    <string name="privacy_protection_summary">开启隐私保护后，我们会尝试防止小米推送 SDK 读取一些内容，如本应用申请的权限等。开启后可能无法注册或推送，请谨慎使用。开启/关闭后需要重启应用。</string>
+
+    <string name="restart">重启</string>
+</resources>

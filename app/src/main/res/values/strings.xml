@@ -34,9 +34,6 @@
 
     <string name="account_card_title">Account and alias</string>
     <string name="account_card_description">Set your account and alias for this device, you can send push to this alias or account</string>
-    <string name="account_card_current"><![CDATA[
-Current alias: <b>%1$s</b>, account: <b>%2$s</b>
-    ]]></string>
     <string name="account_card_set_alias">Set alias</string>
     <string name="account_card_set_account">Set account name</string>
 
@@ -162,4 +159,15 @@ Current: <b>%02d:%02d-%02d:%02d</b> %5$s
     <string name="alias_empty_description">To add a new one, click the button on right bottom corner</string>
     <string name="account_empty_title">You don\'t have any account</string>
     <string name="account_empty_description">To add a new one, click the button on right bottom corner</string>
+    <string name="command_register">Register</string>
+    <string name="push_receiver_command_error">%1$s fail, error code %2$s</string>
+
+    <!-- Switch On/Off  -->
+    <string name="switch_on_text">On</string>
+    <string name="switch_off_text">Off</string>
+
+    <string name="privacy_protection_title">Privacy protection</string>
+    <string name="privacy_protection_summary">By using privacy protection, the tester will try to prevent the MiPush SDK to read some data from your device, such as the permissions required by the tester. After enabling, it may not be able to register or receive push, use it at your own risk. Toggling needs to restart the app.</string>
+
+    <string name="restart">Restart</string>
 </resources>
