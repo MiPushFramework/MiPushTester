@@ -35,6 +35,7 @@ import moe.yuuta.mipushtester.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class MainFragment : Fragment(), MainFragmentUIHandler {
     private val logger = XLog.tag(MainFragment::class.simpleName).build()
@@ -194,6 +195,9 @@ class MainFragment : Fragment(), MainFragmentUIHandler {
         requireContext().getSharedPreferences("mipush", MODE_PRIVATE).edit().clear().commit()
         requireContext().getSharedPreferences("mipush_extra", MODE_PRIVATE).edit().clear().commit()
         requireContext().getSharedPreferences("mipush_oc", MODE_PRIVATE).edit().clear().commit()
+        File(requireContext().filesDir.absolutePath + "/" + "mipush_region").delete()
+        File(requireContext().filesDir.absolutePath + "/" + "mipush_region.lock").delete()
+        requireContext().getDatabasePath("geofencing").delete()
         Toast.makeText(requireContext(), R.string.reset_toast, Toast.LENGTH_LONG).show()
 
         Utils.restart(requireContext())
