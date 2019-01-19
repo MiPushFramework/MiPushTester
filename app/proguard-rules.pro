@@ -1,4 +1,5 @@
 # MiPush
+-keep class moe.yuuta.mipushtester.push.InternalPushReceiver {*;}
 -keep class moe.yuuta.mipushtester.push.PushReceiver {*;}
 -dontwarn com.xiaomi.push.**
 -dontwarn com.xiaomi.mipush.**

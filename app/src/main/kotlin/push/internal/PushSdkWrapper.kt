@@ -1,13 +1,17 @@
 package moe.yuuta.mipushtester.push.internal
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import androidx.annotation.NonNull
 import com.oasisfeng.condom.*
 import com.xiaomi.mipush.sdk.MiPushClient
+import moe.yuuta.mipushtester.push.InternalPushReceiver
 
 /**
  * The utils class to operate MiPushClient and other third-party components.
@@ -45,23 +49,31 @@ object PushSdkWrapper {
                     .preventBroadcastToBackgroundPackages(false)
                     .preventServiceInBackgroundPackages(false)
                     .setDryRun(false)
-                    .setOutboundJudge(object : OutboundJudge{
-                        override fun shouldAllow(type: OutboundType, intent: Intent?, target_package: String): Boolean {
-                            // Always allow to get hte realist results
-                            return true
+                    .setPackageManagerFactory { base, downstream ->
+                        object : PackageManagerWrapper(downstream) {
+                            @SuppressLint("RestrictedApi")
+                            override fun queryBroadcastReceivers(intent: Intent, flags: Int): MutableList<ResolveInfo> {
+                                if ((intent.action ?: "").equals("com.xiaomi.mipush.RECEIVE_MESSAGE") &&
+                                        (intent.`package` ?: "").equals(base.packageName)) {
+                                    val resolveInfo: ResolveInfo = ResolveInfo()
+                                    val activityInfo: ActivityInfo = ActivityInfo()
+                                    resolveInfo.activityInfo = activityInfo
+                                    activityInfo.name = InternalPushReceiver::class.java.name
+                                    return mutableListOf(resolveInfo)
+                                }
+                                return super.queryBroadcastReceivers(intent, flags)
+                            }
                         }
-                    })
-                    .addKit(object : CondomKit{
-                        override fun onRegister(registry: CondomKit.CondomKitRegistry) {
-                            registry.addPermissionSpoof(android.Manifest.permission.INTERNET)
-                            registry.addPermissionSpoof(android.Manifest.permission.ACCESS_NETWORK_STATE)
-                            registry.addPermissionSpoof(android.Manifest.permission.ACCESS_WIFI_STATE)
-                            registry.addPermissionSpoof(android.Manifest.permission.READ_PHONE_STATE)
-                            registry.addPermissionSpoof(android.Manifest.permission.GET_TASKS)
-                            registry.addPermissionSpoof(android.Manifest.permission.VIBRATE)
-                            registry.addPermissionSpoof("${BuildConfig.APPLICATION_ID}.permission.MIPUSH_RECEIVE")
+                    }
+                    .addKit {
+                            it.addPermissionSpoof(android.Manifest.permission.INTERNET)
+                            it.addPermissionSpoof(android.Manifest.permission.ACCESS_NETWORK_STATE)
+                            it.addPermissionSpoof(android.Manifest.permission.ACCESS_WIFI_STATE)
+                            it.addPermissionSpoof(android.Manifest.permission.READ_PHONE_STATE)
+                            it.addPermissionSpoof(android.Manifest.permission.GET_TASKS)
+                            it.addPermissionSpoof(android.Manifest.permission.VIBRATE)
+                            it.addPermissionSpoof("${BuildConfig.APPLICATION_ID}.permission.MIPUSH_RECEIVE")
                         }
-                    })
 
     /**
      * Set up Condom and other necessary things.
