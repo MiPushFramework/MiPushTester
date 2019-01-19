@@ -35,8 +35,14 @@ object PushSdkWrapper {
         CondomContext.wrap(context.applicationContext, "MiPushSDK", createOptions()).applicationContext as Application
 
     fun isDisabled(@NonNull context: Context): Boolean =
-            (context.packageManager.getComponentEnabledSetting(ComponentName(context, CoreProvider::class.java))
-                    == PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
+            when (context.packageManager.getComponentEnabledSetting(ComponentName(context, CoreProvider::class.java))) {
+                PackageManager.COMPONENT_ENABLED_STATE_DEFAULT -> true
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED -> true
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED -> false
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED -> true
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER -> true
+                else -> true
+            }
 
     private fun wrapContext(@NonNull context: Context): Application =
             if (isDisabled(context))
