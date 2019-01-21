@@ -5,7 +5,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0-alpha10'
+        classpath 'com.android.tools.build:gradle:3.5.0-alpha01'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.9.4'
         classpath 'io.fabric.tools:gradle:1.27.0'
         classpath "com.github.triplet.gradle:play-publisher:2.0.0-rc2"
@@ -150,5 +150,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     kapt 'com.android.databinding:compiler:3.1.4'
     // Condom
-    implementation 'com.oasisfeng.condom:library:2.2.0'
+    implementation 'com.oasisfeng.condom:library:2.3.1'
 }
