@@ -39,6 +39,7 @@ dependencies {
     compile "io.vertx:vertx-core:$vertxVersion"
     compile "io.vertx:vertx-web:$vertxVersion"
     compile "io.vertx:vertx-web-client:$vertxVersion"
+    compile "io.vertx:vertx-web-templ-handlebars:$vertxVersion"
     compile project(':common')
     testCompile("junit:junit:4.12")
     testCompile "io.vertx:vertx-unit:$vertxVersion"
