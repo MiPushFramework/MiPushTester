@@ -38,9 +38,7 @@ open class ApiHandlerImpl(private val vertx: Vertx?) : ApiHandler {
             return
         }
         var locale: Locale = Resources.getRequestLocale(routingContext.preferredLanguage(), routingContext.request())
-        logger.error(locale.toLanguageTag())
         if (Resources.isDefaultLocale("index_author", locale)) locale = Locale.getDefault()
-        logger.error(locale.toLanguageTag())
         routingContext.data().put("lang", locale.toLanguageTag())
         routingContext.data().put("title", Resources.getValueOrResourcesString(if (isFramework) "index_title_framework" else "index_title_test", locale))
         routingContext.data().put("index_welcome", Resources.getValueOrResourcesString(if (isFramework) "index_welcome_framework" else "index_welcome_test", locale))
@@ -57,6 +55,7 @@ open class ApiHandlerImpl(private val vertx: Vertx?) : ApiHandler {
         routingContext.data().put("index_item_2_icon", Resources.getValueOrResourcesString(if (isFramework) "index_item_2_icon_framework" else "index_item_2_icon_test", locale))
         routingContext.data().put("index_item_3_icon", Resources.getValueOrResourcesString(if (isFramework) "index_item_3_icon_framework" else "index_item_3_icon_test", locale))
         routingContext.data().put("icon", Resources.getValueOrResourcesString(if (isFramework) "index_icon_framework" else "index_icon_test", locale))
+        routingContext.data().put("footer", Resources.getValueOrResourcesString("index_footer", locale))
         // TODO: Give user APK directly
         routingContext.data().put("link", "https://github.com/MiPushFramework/${if (isFramework) "MiPushFramework" else "MiPushTester"}/releases")
         val engine: HandlebarsTemplateEngine = HandlebarsTemplateEngine.create(vertx)
