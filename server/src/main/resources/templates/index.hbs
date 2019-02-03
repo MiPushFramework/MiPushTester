@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+    <head>
+        <meta http-equiv="x-dns-prefetch-control" content="on">
+        <link rel="dns-prefetch" href="https://cdn.bootcss.com">
+        <link rel="dns-prefetch" href="https://i.loli.net">
+        <link rel="preconnect" href="https://cdn.bootcss.com">
+        <link rel="preconnect" href="https://i.loli.net">
+        <title>{{title}}</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+        <meta name="theme-color" content="#42A5F5">
+        <meta name="apple-mobile-web-app-title" content="{{title}}">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#42A5F5">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="480">
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="icon shortcut" type="image/png" href="{{icon}}">
+        <link rel="icon" sizes="512x512" href="{{icon}}">
+        <link rel="apple-touch-icon" href="{{icon}}">
+        <meta name="author" content="Trumeet">
+        <meta name="description" content="Dir, a Simple and Elegant Garbage Cleaner for Android">
+        <meta name="keywords" content="Android, Push, Xiaomi, 小米, 推送">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mdui/0.2.1/css/mdui.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/mdui/0.2.1/js/mdui.min.js"></script>
+    </head>
+    <body class="mdui-drawer-body-left mdui-appbar-with-toolbar">
+        <div class="mdui-appbar mdui-appbar-fixed mdui-color-white">
+            <div class="mdui-toolbar">
+                <a class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#drawer'}"><i class="mdui-icon material-icons">menu</i></a>
+                <a class="mdui-typo-headline">{{title}}</a>
+            </div>
+        </div>
+        <div class="mdui-drawer" id="drawer">
+            <div class="mdui-list">
+                <a href="https://yuuta.moe" target="_blank" class="mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon mdui-icon material-icons">home</i>
+                    <div class="mdui-list-item-content">{{index_author}}</div>
+                </a>
+                <a href="https://productforum.yuuta.moe/t/{{index_forum_product}}" target="_blank" class="mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon mdui-icon material-icons">forum</i>
+                    <div class="mdui-list-item-content">{{index_forum}}</div>
+                </a>
+            </div>
+        </div>
+        <div class="mdui-container">
+            <div class="mdui-hidden-sm-up">
+                <img class="mdui-center" src="{{icon}}" width="96px">
+            </div>
+            <div class="mdui-hidden-xs-down">
+                <img class="mdui-center" src="{{icon}}" width="128px">
+            </div>
+            <div class="mdui-row mdui-center">
+                <div class="mdui-col-xs-12 mdui-col-sm-10 mdui-col-offset-sm-1">
+                    <div class="mdui-card-content mdui-text-center">
+                        <div class="mdui-typo-title-opacity">{{index_welcome}}</div>
+                    </div>
+                </div>
+                <div class="mdui-col-xs-11 mdui-col-sm-8 mdui-col-offset-sm-2 mdui-col-md-6 mdui-col-offset-md-3">
+                    <ul class="mdui-list">
+                        <li class="mdui-list-item mdui-ripple mdui-hoverable"><i class="mdui-list-item-avatar mdui-icon material-icons">{{index_item_1_icon}}</i>
+                            <div class="mdui-list-item-content">
+                                <div class="mdui-list-item-title">
+                                    <strong>{{index_item_1_title}}</strong>
+                                </div>
+                                <div class="mdui-list-item-text">
+                                    <span class="mdui-text-color-black">{{index_item_1_text}}</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mdui-divider-inset mdui-m-y-0"></li>
+                        <li class="mdui-list-item mdui-ripple mdui-hoverable"><i class="mdui-list-item-avatar mdui-icon material-icons">{{index_item_2_icon}}</i>
+                            <div class="mdui-list-item-content">
+                                <div class="mdui-list-item-title">
+                                    <strong>{{index_item_2_title}}</strong>
+                                </div>
+                                <div class="mdui-list-item-text">
+                                    <span class="mdui-text-color-black">{{index_item_2_text}}</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mdui-divider-inset mdui-m-y-0"></li>
+                        <li class="mdui-list-item mdui-ripple mdui-hoverable"><i class="mdui-list-item-avatar mdui-icon material-icons">{{index_item_3_icon}}</i>
+                            <div class="mdui-list-item-content">
+                                <div class="mdui-list-item-title">
+                                    <strong>{{index_item_3_title}}</strong>
+                                </div>
+                                <div class="mdui-list-item-text">
+                                    <span class="mdui-text-color-black">{{index_item_3_text}}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mdui-divider">
+            </div>
+            <br>
+
+            <!-- footer -->
+            <div class="mdui-typo-subheading-opacity mdui-text-center" style="bottom:16px">
+                <span>{{footer}}</span><br>
+                <span>Copyright © Trumeet</span><br>
+                <span>Website uses <a href="https://github.com/DirClean/dirclean.github.io" target="_blank" style="text-decoration:none">Dir</a> under GPL-3.0 licenses</span>
+            </div>
+            <br>
+            <div>
+                <a class="mdui-fab mdui-ripple mdui-color-blue" href="{{link}}" style="position:fixed!important;bottom:16px;right:16px!important"><i class="mdui-icon material-icons">file_download</i></a>
+            </div>
+        </div>
+    </body>
+</html>

@@ -5,6 +5,7 @@ import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.web.RoutingContext
+import io.vertx.ext.web.templ.handlebars.HandlebarsTemplateEngine
 import moe.yuuta.common.Constants
 import moe.yuuta.common.Constants.DISPLAY_LIGHTS
 import moe.yuuta.common.Constants.DISPLAY_SOUND
@@ -26,37 +27,47 @@ import java.util.stream.Collectors
 open class ApiHandlerImpl(private val vertx: Vertx?) : ApiHandler {
     private val logger = LoggerFactory.getLogger(ApiHandlerImpl::class.simpleName)
 
-    companion object {
-        const val HTML_FRAMEWORK_INDEX = "<html>" +
-                "<head>" +
-                "<title>MiPushFramework</title>" +
-                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                "</head>" +
-                "<body>" +
-                "<p>Homepage is still under construction, check it back later.</p>" +
-                "<a href=\"https://github.com/MiPushFramework/MiPushFramework\">GitHub</a>" +
-                "</body>" +
-                "</html>"
-
-        const val HTML_TESTER_INDEX = "<html>" +
-                "<head>" +
-                "<title>MiPush Tester</title>" +
-                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                "</head>" +
-                "<body>" +
-                "<p>Homepage is still under construction, check it back later.</p>" +
-                "<a href=\"https://github.com/MiPushFramework/MiPushTester\">GitHub</a>" +
-                "</body>" +
-                "</html>"
-    }
-
     @Override
     override fun handleFrameworkIndex(routingContext: RoutingContext) {
+        handleAnyIndex(true, routingContext)
+    }
+
+    private fun handleAnyIndex(isFramework: Boolean, routingContext: RoutingContext) {
         val response = routingContext.response()
-        if (!response.ended() && !response.closed()) {
-            response.putHeader("Content-Type", "text/html")
-                    .setStatusCode(200)
-                    .end(HTML_FRAMEWORK_INDEX)
+        if (response.ended() || response.closed()) {
+            return
+        }
+        var locale: Locale = Resources.getRequestLocale(routingContext.preferredLanguage(), routingContext.request())
+        if (Resources.isDefaultLocale("index_author", locale)) locale = Locale.getDefault()
+        routingContext.data().put("lang", locale.toLanguageTag())
+        routingContext.data().put("title", Resources.getValueOrResourcesString(if (isFramework) "index_title_framework" else "index_title_test", locale))
+        routingContext.data().put("index_welcome", Resources.getValueOrResourcesString(if (isFramework) "index_welcome_framework" else "index_welcome_test", locale))
+        routingContext.data().put("index_author", Resources.getValueOrResourcesString("index_author", locale))
+        routingContext.data().put("index_item_1_title", Resources.getValueOrResourcesString(if (isFramework) "index_framework_item_1_title" else "index_test_item_1_title", locale))
+        routingContext.data().put("index_item_2_title", Resources.getValueOrResourcesString(if (isFramework) "index_framework_item_2_title" else "index_test_item_2_title", locale))
+        routingContext.data().put("index_item_3_title", Resources.getValueOrResourcesString(if (isFramework) "index_framework_item_3_title" else "index_test_item_3_title", locale))
+        routingContext.data().put("index_item_1_text", Resources.getValueOrResourcesString(if (isFramework) "index_framework_item_1_text" else "index_test_item_1_text", locale))
+        routingContext.data().put("index_item_2_text", Resources.getValueOrResourcesString(if (isFramework) "index_framework_item_2_text" else "index_test_item_2_text", locale))
+        routingContext.data().put("index_item_3_text", Resources.getValueOrResourcesString(if (isFramework) "index_framework_item_3_text" else "index_test_item_3_text", locale))
+        routingContext.data().put("index_forum", Resources.getValueOrResourcesString("index_forum", locale))
+        routingContext.data().put("index_forum_product", Resources.getValueOrResourcesString(if (isFramework) "index_forum_product_framework" else "index_forum_product_test", locale))
+        routingContext.data().put("index_item_1_icon", Resources.getValueOrResourcesString(if (isFramework) "index_item_1_icon_framework" else "index_item_1_icon_test", locale))
+        routingContext.data().put("index_item_2_icon", Resources.getValueOrResourcesString(if (isFramework) "index_item_2_icon_framework" else "index_item_2_icon_test", locale))
+        routingContext.data().put("index_item_3_icon", Resources.getValueOrResourcesString(if (isFramework) "index_item_3_icon_framework" else "index_item_3_icon_test", locale))
+        routingContext.data().put("icon", Resources.getValueOrResourcesString(if (isFramework) "index_icon_framework" else "index_icon_test", locale))
+        routingContext.data().put("footer", Resources.getValueOrResourcesString("index_footer", locale))
+        // TODO: Give user APK directly
+        routingContext.data().put("link", "https://github.com/MiPushFramework/${if (isFramework) "MiPushFramework" else "MiPushTester"}/releases")
+        val engine: HandlebarsTemplateEngine = HandlebarsTemplateEngine.create(vertx)
+        engine.render(routingContext.data(), "templates/index.hbs") {
+            if (it.succeeded()) {
+                routingContext.response()
+                        .setStatusCode(200)
+                        .putHeader("Content-type", "text/html")
+                        .end(it.result())
+            } else {
+                routingContext.fail(it.cause())
+            }
         }
     }
 
@@ -176,12 +187,7 @@ open class ApiHandlerImpl(private val vertx: Vertx?) : ApiHandler {
 
     @Override
     override fun handleTesterIndex(routingContext: RoutingContext) {
-        val response = routingContext.response()
-        if (!response.ended() && !response.closed()) {
-            response.putHeader("Content-Type", "text/html")
-                    .setStatusCode(200)
-                    .end(HTML_TESTER_INDEX)
-        }
+        handleAnyIndex(false, routingContext)
     }
 
     @Override

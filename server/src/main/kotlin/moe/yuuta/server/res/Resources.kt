@@ -13,6 +13,15 @@ object Resources {
         ResourceBundle.getBundle("strings", locale)
 
     @JvmStatic
+    fun isDefaultLocale(key: String, requestLocale: Locale): Boolean {
+        try {
+            return getStringInBundleInUTF8(key, getBundle(requestLocale)) == ""
+        } catch (e: MissingResourceException) {
+            return true
+        }
+    }
+
+    @JvmStatic
     fun getString(key: String, locale: Locale, vararg formatArgs: Any): String {
         val strings = getBundle(locale)
         return String.format(getStringInBundleInUTF8(key, strings), formatArgs)
