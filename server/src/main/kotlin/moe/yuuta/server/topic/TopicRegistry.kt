@@ -19,7 +19,7 @@ open class TopicRegistry {
     private val mTopicRegistry: MutableMap<String, Topic> = mutableMapOf()
 
     open fun getDefaultTopics(): List<Topic> =
-        Arrays.asList(Every5MinTopicVerticle.getTopic()).toList()
+        kotlin.collections.emptyList()
 
     fun init(vertx: Vertx, handler: Handler<AsyncResult<CompositeFuture>>) {
         CompositeFuture.all(
