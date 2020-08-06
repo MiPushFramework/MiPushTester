@@ -125,9 +125,8 @@ dependencies {
     // Stream support for Java8-
     implementation 'com.annimon:stream:1.2.1'
     // Preferences
-    implementation 'moe.shizuku.preference:preference:3.0.0'
-    implementation 'moe.shizuku.preference:preference-dialog-android:3.0.0'
-    implementation 'moe.shizuku.preference:preference-simplemenu:3.0.0'
+    implementation 'moe.shizuku.preference:preference-appcompat:4.0.0'
+    implementation 'moe.shizuku.preference:preference-simplemenu-appcompat:4.0.0'
     // Logger
     implementation 'com.elvishew:xlog:1.6.1'
     // Common
