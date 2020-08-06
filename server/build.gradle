@@ -35,17 +35,17 @@ test {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile "io.vertx:vertx-core:$vertxVersion"
-    compile "io.vertx:vertx-web:$vertxVersion"
-    compile "io.vertx:vertx-web-client:$vertxVersion"
-    compile "io.vertx:vertx-web-templ-handlebars:$vertxVersion"
-    compile project(':common')
-    testCompile("junit:junit:4.12")
-    testCompile "io.vertx:vertx-unit:$vertxVersion"
-    testCompile "org.mockito:mockito-core:2.23.4"
-    testCompile "org.powermock:powermock-module-junit4:2.0.0-RC.1"
-    testCompile "org.powermock:powermock-api-mockito2:2.0.0-RC.1"
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    implementation "io.vertx:vertx-core:$vertxVersion"
+    implementation "io.vertx:vertx-web:$vertxVersion"
+    implementation "io.vertx:vertx-web-client:$vertxVersion"
+    implementation "io.vertx:vertx-web-templ-handlebars:$vertxVersion"
+    implementation project(':common')
+    testImplementation("junit:junit:4.12")
+    testImplementation "io.vertx:vertx-unit:$vertxVersion"
+    testImplementation "org.mockito:mockito-core:2.23.4"
+    testImplementation "org.powermock:powermock-module-junit4:2.0.0-RC.1"
+    testImplementation "org.powermock:powermock-api-mockito2:2.0.0-RC.1"
     // Kotlin
     implementation  "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation  "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
