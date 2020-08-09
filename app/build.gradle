@@ -6,7 +6,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.9.4'
-        classpath "com.github.triplet.gradle:play-publisher:2.0.0-rc2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -16,16 +15,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
-
-if (file("play-store-api.json").exists()) {
-    apply plugin: 'com.github.triplet.play'
-    play {
-        serviceAccountCredentials = file("play-store-api.json")
-        track = "beta"
-        userFraction = 1.0
-        resolutionStrategy = "ignore"
-    }
-}
 
 def xmpushProperties = new Properties()
 def conf = project.file("xmpush.properties")
