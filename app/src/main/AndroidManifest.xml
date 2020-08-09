@@ -51,16 +51,13 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:process=":push"
             android:enabled="true"
             android:exported="true"
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler" />
         <service
-            android:process=":push"
             android:enabled="true"
             android:name="com.xiaomi.mipush.sdk.MessageHandleService" />
         <receiver
-            android:process=":push"
             android:exported="true"
             android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver" >
             <intent-filter>
@@ -77,7 +74,6 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:process=":push"
             android:exported="true"
             android:name="moe.yuuta.mipushtester.push.PushReceiver">
             <intent-filter>
