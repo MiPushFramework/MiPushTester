@@ -17,6 +17,7 @@ data class SendMessageResponse(
 
         const val CODE_SUCCESS = 0
     }
+    @JsonIgnoreProperties(ignoreUnknown = true)
     class Data {
         private val id = ""
     }
