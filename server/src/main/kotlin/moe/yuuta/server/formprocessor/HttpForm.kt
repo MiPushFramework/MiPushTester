@@ -17,6 +17,7 @@ object HttpForm {
             try {
                 var rawValue: Any? = field.get(obj)
                 if (rawValue == null) continue
+                if (data.ignorable && rawValue.toString() == "") continue
                 try {
                     if (rawValue.toString().toDouble() == "0".toDouble()) {
                         if (data.ignorable) continue

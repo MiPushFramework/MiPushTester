@@ -13,6 +13,21 @@ class SampleObject {
     @FormData(name = "ignorableInteger")
     private int ignorableInteger = 0;
 
+    @FormData(name = "shouldIgnored")
+    private String shouldIgnored = "";
+
+    @FormData(name = "shouldIgnored2")
+    private String shouldIgnored2 = null;
+
+    @FormData(name = "shouldIgnored3", ignorable = false)
+    private String shouldIgnored3 = null;
+
+    @FormData(name = "shouldNotIgnored", ignorable = false)
+    private String shouldNotIgnored = "";
+
+    @FormData(name = "shouldNotIgnored2", ignorable = false)
+    private int shouldNotIgnored2 = 0;
+
     public String getNormalString() {
         return normalString;
     }
